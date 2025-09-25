@@ -12,8 +12,10 @@ export default function DatasourceSpecificInstructions({ dataSource }: { dataSou
     const generic = useRichTranslations("instructions");
 
     const isWhatsApp = dataSource === DataSourceValue.WhatsApp;
+    const isIMessage = dataSource === DataSourceValue.IMessage;
+    const isInstagram = dataSource === DataSourceValue.Instagram;
     const secondParagraph = isWhatsApp ? "selection" : "duration";
-    const stepsCount = dataSource === DataSourceValue.IMessage ? 6 : isWhatsApp ? 8 : 10;
+    const stepsCount = dataSource === DataSourceValue.IMessage ? 6 : isWhatsApp ? 8 : isInstagram ? 18 : 19;
     const verticalVideo = isWhatsApp || dataSource === DataSourceValue.Instagram;
 
     const externalLinks = {
@@ -22,26 +24,42 @@ export default function DatasourceSpecificInstructions({ dataSource }: { dataSou
         link: `${dataSource.toLowerCase()}.external-documentation`,
     };
 
-    const FirstBlock = ({ halfWidth = false }: { halfWidth?: boolean }) => (
-        <Grid size={{ xs: 12, md: halfWidth ? 6 : 10 }}>
-            <BlockTitle>{generic.t("headers.devices")}</BlockTitle>
-            <Typography>{source.rich("devices.body")}</Typography>
+    const FirstBlock = ({ halfWidth = false }: { halfWidth?: boolean }) => {
+        if (isIMessage) {
+            return (
+                <Grid size={{ xs: 12, md: halfWidth ? 6 : 10 }}>
+                    <Typography>{source.rich("devices.body")}</Typography>
+                </Grid>
+            );
+        }
+        return (
+            <Grid size={{ xs: 12, md: halfWidth ? 6 : 10 }}>
+                <BlockTitle>{generic.t("headers.devices")}</BlockTitle>
+                <Typography>{source.rich("devices.body")}</Typography>
 
-            <BlockTitle>{source.t(`${secondParagraph}.title`)}</BlockTitle>
-            <Typography>{source.rich(`${secondParagraph}.body`)}</Typography>
+                <BlockTitle>{source.t(`${secondParagraph}.title`)}</BlockTitle>
+                <Typography>{source.rich(`${secondParagraph}.body`)}</Typography>
 
-            <BlockTitle>{generic.t("headers.data-deletion")}</BlockTitle>
-            <Typography>
-                {source.rich("data-deletion.body", {
-                    link: "secure-delete",
-                    link_datenschutz: "datenschutz",
-                    link_android: "delete-from-android",
-                    link_ios: "delete-from-ios",
-                })}
-            </Typography>
-        </Grid>
-    );
+                <BlockTitle>{generic.t("headers.data-deletion")}</BlockTitle>
+                <Typography>
+                    {source.rich("data-deletion.body", {
+                        link: "secure-delete",
+                        link_datenschutz: "datenschutz",
+                        link_android: "delete-from-android",
+                        link_ios: "delete-from-ios",
+                    })}
+                </Typography>
+            </Grid>
+        );
+    };
 
+    if (isIMessage) {
+        return (
+            <Grid container spacing={2} mt={-2} justifyContent="center" alignItems="flex-start">
+                <FirstBlock />
+            </Grid>
+        );
+    }
     return (
         <Grid container spacing={2} mt={-2} justifyContent="center" alignItems="flex-start">
             {verticalVideo ? (

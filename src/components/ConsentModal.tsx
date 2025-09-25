@@ -1,7 +1,7 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
-import {useLocale} from "next-intl";
+import React, { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -11,10 +11,10 @@ import DialogActions from "@mui/material/DialogActions";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import {generateExternalDonorId, useDonation} from "@/context/DonationContext";
-import {IdInputMethod} from "@models/settings";
-import {useRichTranslations} from "@/hooks/useRichTranslations";
-import {BlockTitle, ContactBlock} from "@/styles/StyledTypography";
+import { generateExternalDonorId, useDonation } from "@/context/DonationContext";
+import { IdInputMethod } from "@models/settings";
+import { useRichTranslations } from "@/hooks/useRichTranslations";
+import { BlockTitle, ContactBlock } from "@/styles/StyledTypography";
 import FullSizeModal from "@components/FullSizeModal";
 import { checkDonorIdExists } from "@/app/instructions/actions";
 
@@ -96,9 +96,10 @@ export default function ConsentModal() {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleOpen}>
+            <Button variant="contained" onClick={() => setDialogOpen(true)}>
                 {actions.t("donate")}
             </Button>
+            {/*            
             <FullSizeModal
                 open={open}
                 onClose={handleClose}
@@ -142,6 +143,7 @@ export default function ConsentModal() {
                     {consent.t("confirmation")}
                 </Typography>
             </FullSizeModal>
+*/}
 
             {idInputMethod !== IdInputMethod.AUTOMATED && (
                 <Dialog open={dialogOpen} onClose={handleDialogClose}>

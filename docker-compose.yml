@@ -24,7 +24,7 @@ services:
         - DONOR_SURVEY_LINK
         - FEEDBACK_SURVEY_LINK
     ports:
-      - "3000:3000"
+      - "9012:3000"
     environment:
       - DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
       - NODE_ENV=production

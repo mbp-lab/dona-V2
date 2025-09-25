@@ -58,7 +58,7 @@
       "col1": {
         "title": "Receive feedback",
         "image-path": "/images/landingExampleFeedback_English.png",
-        "body": "You will receive graphs on your messaging behavior, such as in which chats you write the most, when are you the most active, how fast you reply, etc. This study is not intended to be a clinical-psychological diagnosis."
+        "body": "You will receive figures on your messaging behavior, such as in which chats you write the most, when are you the most active, how fast you reply, etc. This study is not intended to be a clinical-psychological diagnosis."
       },
       "col2": {
         "title": "Stay anonymous",
@@ -106,7 +106,7 @@
       "title": "What data will be used?",
       "body1": "<strong>Data donation:</strong> When donating your interaction data, we extract metadata (e.g. length and timestamp of message as well as pseudonyms of conversation participants) and no actual contents (e.g. message text or name of message sender). To ensure that, we anonymize your data on the user-side, meaning that your private data is anonymized locally and does not leave your device. This means that we will never see the content of your conversations. Before uploading, we will show you a preview of the data so that you can verify that it is sufficiently anonymous.",
       "body2": "<strong>Questionnaires:</strong> You first fill out questionnaires about your demographic information. You can then carry out the data donation and receive feedback. Questionnaire data is also collected completely anonymously using <link>LimeSurvey</link>."
-      },
+    },
     "data-handling": {
       "title": "What happens to my data?",
       "body1": "Since we are not collecting any names or other person-specific information, we will not be able to associate you with your data once the study has been completed - the donated data is anonymous. This means that your data cannot be deleted on request.",
@@ -126,7 +126,7 @@
   "instructions": {
     "about": {
       "title": "How do I request data from social media platforms?",
-      "body": "Before participating in the study, please request your data directly from Facebook and/or WhatsApp and/or Instagram. You can donate data from each of these platforms. If you only want to donate data from one platform, please select the platform that is more important to you. <b>Please take a close look at the corresponding instructions, as they contain important information for the further steps.</b>"
+      "body": "Before participating in the study, please request your data directly from Facebook, WhatsApp, iMessage, and/or Instagram. You can donate data from each of these platforms. If you only want to donate data from one platform, please select the platform that is more important to you. <b>Please take a close look at the corresponding instructions, as they contain important information for the further steps.</b>"
     },
     "datasource": {
       "title-format": "Instructions for getting {datasource} data"
@@ -141,7 +141,6 @@
       "body": "If you have received your data using these instructions, you can now start with the declaration of consent and survey. Afterwards you can donate your data."
     }
   },
-
   "whatsapp": {
     "devices": {
       "body": "You need your smartphone, on which you use WhatsApp. Please make sure that you are storing the data on a device that no one but you has access to."
@@ -161,13 +160,13 @@
     },
     "steps": {
       "1": "Open WhatsApp on your smartphone.",
-      "2": "Think about which five chats are most relevant to you (e.g. close friend, partner).",
+      "2": "Think about which <b>five chats</b> are with people who are the closest to you (e.g. close friend, partner).",
       "3": "Pick one of the selected chats and open it.",
       "4": "Click on the contact's name in the top center.",
-      "5": "Scroll down and click on \"Export chat\". A window will open. Select \"WITHOUT MEDIA\".",
-      "6": "Select \"Mail\" (envelope) and send the mail with the attached chat file to yourself. Please only send from/to a secure mail service (e.g. university mail address). Alternatively, you can send the files to your computer via Bluetooth or Airdrop.",
-      "7": "Download the chat file from the email to your computer.",
-      "8": "Repeat the steps 3-7 for all chats."
+      "5": "Scroll down and click on <b>Export chat</b>. A window will open. Select \"WITHOUT MEDIA\".",
+      "6": "Select <b>Mail</b> (envelope icon) and send the mail with the attached chat file to yourself.",
+      "7": "Download all chat files from the email to your computer.",
+      "8": "Repeat steps 3-7 for all five chats."
     },
     "external-documentation": "The official documentation on how to download your data can be found here for <link_ios>iOS</link_ios> or <link_android>Android</link_android>.",
     "logo": "w-logo.svg"
@@ -186,16 +185,25 @@
     "description": "Make a request to Facebook to download your Facebook data. You will receive a notification from Facebook once the data is available for download and can then start participating in the study. <strong>We recommend using a computer if donating from Facebook as the data size may be relatively large.</strong>",
     "external-documentation": "The official documentation on how to download your data can be found <link>here</link>.",
     "steps": {
-      "1": "Open Facebook and log in.",
-      "2": "In the top right corner, click on the “Your Profile” button and Select “Settings and privacy”.",
-      "3": "Select “Settings”. Then select \"Your Facebook information\" in the navigation bar on the left.",
-      "4": "On the \"Your Facebook information\" page click on \"Download your information\". A pop-up appears.",
-      "5": "Click on “Request a download”. Then choose “Select types of information”.",
-      "6": "In the interest of data minimization, please first deselect all categories. Then, tick the fields “Messages” and \"Profile information\". Then click “Next”.",
-      "7": "Pick a date range: We encourage you to <b>request the data for 1 year</b> but a shorter time span is possible as well.",
-      "8": "Change the format from HTML to JSON. Then change the media quality from “Medium” to “Low”.",
-      "9": "Click on \"Submit Request\". As soon as the file is ready for download, you will receive a notification from Facebook. This may take a while.",
-      "10": "Scroll back up and click on the \"Available Files\" tab. There you should see the requested file and can download is as soon it is ready."
+      "1": "Log into your account on the Facebook website - you cannot do this on your smartphone.",
+      "2": "Click on your profile picture in the top right, then click <b>Settings & privacy</b>.",
+      "3": "Click <b>Settings</b>.",
+      "4": "Click <b>Accounts Center</b> on the left bar, then click <b>Your information and permissions</b>.",
+      "5": "Click <b>Export your information</b>.",
+      "6": "Click <b>Create export</b>.",
+      "7": "In case you have more than one profile, select the profile you would like to export information from.",
+      "8": "Select <b>Export to device</b>.",
+      "9": "Select <b>Customize information</b>, and then click on <b>Clear all</b> in the top right corner.",
+      "10": "Under <b>Your Facebook activity</b>, tick the field \"Messages\".",
+      "11": "Scroll down until you reach <b>Personal information</b>, and again click on <b>Clear all</b> in the top right corner.",
+      "12": "Under <b>Personal information</b>, tick the field \"Profile information\".",
+      "13": "For the rest of the categories (scrolling down), please click on <b>Clear all</b>, and then click <b>Save</b>. Only \"Messages\" and \"Profile information\" should be ticked.",
+      "14": "Pick a date range: Choose \"Custom\" to request the data for the last 18 months - please ask these dates from the RC.",
+      "15": "Change the format from HTML to JSON.",
+      "16": "Change the media quality from /“Medium quality/” to /“Lower quality/”.",
+      "17": "Click on <b>Start export</b>. As soon as the file is ready for download, you will receive a notification from Facebook. This may take a while.",
+      "18": "Once you get the notification from Facebook, please repeat steps 1 - 5, and now you will be able to download the data.",
+      "19": "For security reasons, you will be asked to fill in your account password, and only then will the file be automatically downloaded to the <b>Downloads</b> folder."
     },
     "video": "/images/facebook/facebook_eng.mp4",
     "logo": "f-logo.svg"
@@ -214,24 +222,31 @@
     "description": "Make a request to Instagram to download your Instagram data. You will receive a notification from Instagram once the data is available for download and can then start participating in the study.",
     "external-documentation": "The official documentation on how to download your data can be found <link>here</link>.",
     "steps": {
-      "1": "Open Instagram and log in.",
-      "2": "In your profile click on the \"Menu\" button (three lines) and select \"Your activity\".",
-      "3": "All the way on the bottom select “Download your information” and continue to the Accounts Center.",
-      "4": "Click on “Download or transfer information”.",
-      "5": "Click on “Some of your information”.",
-      "6": "Select “Messages” (under “Your Instagram activity”) and “Personal information” (under “Personal information”).",
-      "7": "Click on \"Next\".",
-      "8": "Pick a date range: We encourage you to <b>request the data for 1 year</b> but a shorter time span is possible as well.",
-      "9": "Change the format from HTML to JSON. Then change the media quality from “Medium” to “Low”.",
-      "10": "Click on \"Create files\". As soon as the file is ready for download, you will receive a notification from Instagram. This may take a while.",
-      "11": "Scroll back up and click on the \"Available downloads\" tab. There you should see the requested file and can download is as soon it is ready."
+      "1": "Log into your account on the Instagram website - you cannot do this on your smartphone.",
+      "2": "Click <b>More</b> on the bottom left, then click <b>Settings</b>.",
+      "3": "Click <b>Accounts Center</b>, and then click <b>Your information and permissions</b>.",
+      "4": "Click <b>Export your information</b>.",
+      "5": "Click <b>Create export</b>.",
+      "6": "In case you have more than one profile, select the profile you would like to export information from.",
+      "7": "Select <b>Export to device</b>.",
+      "8": "Select <b>Customize information</b>, and then click on <b>Clear all</b> in the top right corner.",
+      "9": "Under <b>Your Instagram activity</b>, tick the field \"Messages\".",
+      "10": "Scroll down until you reach <b>Personal information</b>, and again click on <b>Clear all</b> in the top right corner.",
+      "11": "Under <b>Personal information</b>, tick the field \"Profile information\".",
+      "12": "For the rest of the categories (scrolling down), please click on <b>Clear all</b>, and then click <b>Save</b>. Only \"Messages\" and \"Personal information\" should be ticked.",
+      "13": "Pick a date range: Choose \"Custom\" to request the data for the last 18 months - please ask these dates from the RC.",
+      "14": "Change the format from HTML to JSON.",
+      "15": "Change the media quality from /“Medium quality/” to /“Lower quality/”.",
+      "16": "Click on <b>Start export</b>. As soon as the file is ready for download, you will receive a notification from Instagram. This may take a while.",
+      "17": "Once you get the notification from Instagram, please repeat steps 1 - 5, and now you will be able to download the data.",
+      "18": "For security reasons, you will be asked to fill in your account password, and only then will the file be automatically downloaded to the <b>Downloads</b> folder."
     },
     "video": "/images/instagram/instagram_eng.mp4",
     "logo": "i-logo.svg"
   },
   "imessage": {
     "devices": {
-      "body": "To obtain your iMessage data, you will need access to an iPhone or a Mac. Ensure that you have the necessary permissions to access the data."
+      "body": "Click ‘yes, participate now’ to upload the iMessage file you extracted together with the NYU team. Please contact an NYU team member if you experience any issues."
     },
     "duration": {
       "title": "How long does the data export from iMessage take?",
@@ -317,7 +332,7 @@
     },
     "contacts-mapping": {
       "title": "Aliases of your contacts:",
-      "subtitle": "We have anonymized your data and your contacts. If, in the next step, you want to reconstruct which conversations and contacts are involved in the anonymized evaluation, make a note of the following assignments of contacts (e.g. A**** B*****) and chats (e.g. \"{dataSourceInitials}4\"). From now on, these are the anonymized names for your chats. The assignment is not saved and is lost as soon as you leave this page.",
+      "subtitle": "We have anonymized your data and your contacts. If you want to receive feedback on the conversations and contacts you chat the most with, you can select below at <b>least 3 contacts</b> ( e.g., A***, B***) and/or chats (e.g., IM4, IM5) below.",
       "pseudonyms": "Pseudonyms",
       "contacts": "Contacts",
       "donate": "Donate",
@@ -326,7 +341,7 @@
       "moreContacts": "and {0} others.",
       "onlyYouInConv": "<i>You are the only member in this chat. This could be because the other people have left the chat.</i>"
     },
-    "chat-selection": "You can select up to {max_num} chats to receive focused feedback on, but you <b>must</b> select at least {min_num}, so that the feedback given to you cannot be considered the analysis of your contacts' personal data. The ones currently selected are the {default_num} with the highest word count in messages.",
+    "chat-selection": "In the next step, you will receive feedback on your social media patterns, such as the total number of words for these specific contacts and chats. You can select up to {max_num} chats to receive focused feedback on, but you <b>must</b> select at least {min_num}. The chats currently selected are the {default_num} with the highest word count in messages. This feedback is not saved and will be removed as soon as you leave the page.",
     "sending-wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!",
     "alias-not-required": "Not required",
     "alias": "Username",
@@ -435,7 +450,7 @@
       "pause": "Pause",
       "resetView": "Reset view",
       "you": "You",
-      "contacts": "Contacts",
+      "contacts": "Your Contacts",
       "yearMonth": "Year-Month:",
       "chatWith": "Chat with:",
       "time": "Time",
@@ -445,9 +460,9 @@
     "statisticsCard": {
       "title": "Overview of all Activity",
       "total-messages": "Total messages",
-      "average-per-active-month": "Average messages per active month",
-      "active-years-explanation_format": "In total, there are {years} years in which you participated in conversation (i.e. you sent or received at least one message during the year)",
-      "active-months-explanation_format": "In total, there are {months} months in which you participated in conversation (i.e. you sent or received at least one message during the month)",
+      "average-per-active-month": "Average messages per month",
+      "active-years-explanation_format": "In the past {years} years, you sent and received the following number of messages",
+      "active-months-explanation_format": "There are {months} months in which you sent and received messages",
       "messages": "Messages",
       "total-breakdown": "Total by type",
       "average-breakdown": "Average per active month by type",
@@ -460,10 +475,10 @@
       "title": "Message Composition",
       "messageTypesBarChart": {
         "title": "Message Types",
-        "description": "This chart shows the distribution of message types (text and audio) that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "This figure shows what types of messages you sent and received (text and audio). Click <button>here</button> to see an example with an explanation.",
         "legend": {
           "donor": "Your Messages",
-          "contacts": "Contacts Messages"
+          "contacts": "Your Contacts Messages"
         },
         "types": {
           "text": "Text",
@@ -473,21 +488,21 @@
         "yAxis": "Number of messages",
         "example": {
           "image": "images/charts/feedback_example_messageTypes_english.svg",
-          "text": "<p><b>(1)</b> This shows the total number of text messages you sent.</p><p><b>(2)</b> This shows the total number of text messages you received from your contacts.</p><p><b>(3)</b> This shows the total number of audio messages you sent.</p><p><b>(4)</b> This shows the total number of audio messages you received from your contacts.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> This shows the total number of text messages you sent.</p><p><b>(2)</b> This shows the total number of text messages you received from your contacts.</p><p><b>(3)</b> This shows the total number of audio messages you sent.</p><p><b>(4)</b> This shows the total number of audio messages you received from your contacts.</p><p><b>(5)</b> Click this icon to download the figure.</p>"
         }
       },
       "audioLengthsBarChart": {
         "title": "Audio Message Lengths",
-        "description": "This chart shows the distribution of audio message lengths that you sent and received. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "This chart shows the distribution of audio message lengths that you sent and received. Click <button>here</button> to see an example with an explanation.",
         "legend": {
           "donor": "Your Audio Messages",
-          "contacts": "Contacts Audio Messages"
+          "contacts": "Your Contacts Audio Messages"
         },
         "xAxis": "Audio length",
         "yAxis": "Percentage of audio messages",
         "example": {
           "image": "images/charts/feedback_example_audioLengths_english.svg",
-          "text": "<p><b>(1)</b> This shows the percentage of your audio messages that are less than 10 seconds long.</p><p><b>(2)</b> This shows the percentage of audio messages from your contacts that are less than 10 seconds long.</p><p><b>(3)</b> This shows the percentage of your audio messages that are between 1-2 minutes long.</p><p><b>(4)</b> This shows the percentage of audio messages from your contacts that are between 1-2 minutes long.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> This shows the percentage of your audio messages that are less than 10 seconds long.</p><p><b>(2)</b> This shows the percentage of audio messages from your contacts that are less than 10 seconds long.</p><p><b>(3)</b> This shows the percentage of your audio messages that are between 1-2 minutes long.</p><p><b>(4)</b> This shows the percentage of audio messages from your contacts that are between 1-2 minutes long.</p><p><b>(5)</b> Click this icon to download the figure.</p>"
         }
       }
     },
@@ -497,39 +512,39 @@
       "audioHeader": "In audio messages",
       "animatedIntensityPolarChart": {
         "title": "Planet representation",
-        "description": "This visualization displays you as the yellow dot in the middle. The chats you donated are the white dots around you. The closer a dot is to you, the more words you have written in this chat. In the time-slider below you can see and select the month and year for which the data is shown. The smaller lighter white dots show the activity in the respective chats in other months. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "This figure displays you as the yellow dot in the middle. The chats you donated are the white dots around you. The closer a dot is to you (the yellow dot), the more words you have written in this chat. In the time-slider below you can see and select chats for a specific month and year. The smaller white dots around the yellow dot show the activity in these chats in other months. Click <button>here</button> to see an example with an explanation.",
         "legend": {
           "donor": "You",
           "others": "Chat Intensity"
         },
         "example": {
           "image": "images/charts/feedback_example_polarPlot_english.svg",
-          "text": "<p><b>(1)</b> Here the white solid dot is very close to the large yellow dot in the center. This means that in the month shown below, the communication in this chat was very intense compared to the previous months and the other chats. In this example, there are only a few transparent small dots on the trajectory. This is because the data only covers a few months.</p><p><b>(2)</b> Hardly any transparent history dots can be seen here, as they all lie on top of each other in roughly the same place. This is because the intensity has been very stable over the months in this chat.</p><p><b>(3)</b> In contrast to (2), many transparent points are visible here. So the intensity of this chat has changed a lot over the months. In the currently displayed month, the big intense white dot is further away than some other transparent small points: Accordingly, there were months before in which more words were exchanged in this chat. However, there have also been months when the intensity was lower.</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> Here the white solid dot is very close to the large yellow dot in the center. This means that in the month shown below, the communication in this chat was very intense compared to the previous months and the other chats. In this example, there are only a few transparent small dots on the trajectory. This is because the data only covers a few months.</p><p><b>(2)</b> Hardly any transparent history dots can be seen here, as they all lie on top of each other in roughly the same place. This is because the intensity has been very stable over the months in this chat.</p><p><b>(3)</b> In contrast to (2), many transparent points are visible here. So the intensity of this chat has changed a lot over the months. In the currently displayed month, the big intense white dot is further away than some other transparent small points: Accordingly, there were months before in which more words were exchanged in this chat. However, there have also been months when the intensity was lower.</p><p><b>(4)</b> Click this icon to download the figure.</p>"
         }
       },
       "animatedWordsPerChatBarChart": {
         "title": "Total sent words",
-        "description": "Here you can see the total amount of words you sent in your different chats adding up per month. In the time-slider below you can see and select the month and year for which the data is shown. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "Here you can see the total number of words you sent in your different chats, which sum up per month. In the time-slider below you can see and select messages for a specific month and year. Click <button>here</button> to see an example with an explanation.",
         "legend": "Sent words",
         "xAxis": "Number of sent words",
         "example": {
           "image": "images/charts/feedback_example_horizontalBarChart_english.svg",
-          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the figure.</p>"
         }
       },
       "animatedSecondsPerChatBarChart": {
         "title": "Total sent seconds of audio",
-        "description": "Here you can see the total amount of audio you sent in your different chats adding up per month. In the time-slider below you can see and select the month and year for which the data is shown. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "Here you can see the total number of audio messages you sent in your different chats, which sum up per month. In the time-slider below you can see and select messages for a specific month and year. Click <button>here</button> to see an explanation with an example.",
         "legend": "Sent seconds of audio",
         "xAxis": "Number of sent seconds of audio",
         "example": {
           "image": "images/charts/feedback_example_horizontalBarChart_english.svg",
-          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> In this example, over the entire period the most words were sent in the chat with F9, F10: just over 140 thousand.</p><p><b>(2)</b> In contrast to (1), this example chat had the fewest sent words.</p><p><b>(3)</b> The year and month are displayed here. You can see how many words were sent in the chats per month. Try out the time slider!</p><p><b>(4)</b> Click this icon to download the figure.</p>"
         }
       },
       "moreAbout": "More about your Interaction Intensity",
       "wordCountOverallBarChart": {
-        "description": "This graph shows the total number of words you received and sent across all your donated chats.",
+        "description": "This figure shows the total number of words you received and sent across all your donated chats.",
         "legend": {
           "sent": "Sent words",
           "received": "Received words"
@@ -541,7 +556,7 @@
         }
       },
       "secondCountOverallBarChart": {
-        "description": "This graph shows the total number of seconds of audio you received and sent across all your donated chats.",
+        "description": "This figure shows the total number of seconds of audio you received and sent across all your donated chats.",
         "legend": {
           "sent": "Sent seconds of audio",
           "received": "Received seconds of audio"
@@ -553,7 +568,7 @@
         }
       },
       "wordCountSlidingWindowMean": {
-        "description": "Here you can see the average number of your sent and received words per day (more precisely, we calculate a so-called sliding window average with a window size of 30 days).",
+        "description": "Here you can see the average number of your sent and received words per day.",
         "legend": {
           "sent": "Sent words",
           "received": "Received words",
@@ -562,11 +577,11 @@
         "yAxis": "Average number of words",
         "example": {
           "image": "images/feedback_example_slidingWindowMean_english.svg",
-          "text": "<p class=\"text-left\"><b>(1)</b> In this example, a significant increase in the number of sent and received words can be observed. In this period the sent words were more than the received words. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. But in that period, across all chats, more words were received.</p>"
+          "text": "<p class=\"text-left\"><b>(1)</b> In this example, you can see a significant increase in the number of sent and received words. In this period, you sent more words than you received. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. However, in that period, more words were received across all chats.</p>"
         }
       },
       "secondCountSlidingWindowMean": {
-        "description": "Here you can see the average number of your sent and received seconds of audio per day (more precisely, we calculate a so-called sliding window average with a window size of 30 days).",
+        "description": "Here you can see the average number of your sent and received seconds of audio messages per day.",
         "legend": {
           "sent": "Sent seconds of audio",
           "received": "Received seconds of audio"
@@ -574,26 +589,26 @@
         "yAxis": "Average seconds of audio",
         "example": {
           "image": "images/feedback_example_slidingWindowMean_english.svg",
-          "text": "<p class=\"text-left\"><b>(1)</b> In this example, a significant increase in the number of sent and received words can be observed. In this period the sent words were more than the received words. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. But in that period, across all chats, more words were received.</p>"
+          "text": "<p class=\"text-left\"><b>(1)</b> In this example, you can see a significant increase in the number of sent and received words. In this period, you sent more words than you received. </p><p class=\"text-left\"><b>(2)</b> Here you can see an even bigger increase in sent and received words. However, in that period, more words were received across all chats.</p>"
         }
       }
     },
     "dailyActivityTimes": {
       "title": "Daily Activity Times",
       "dailyActivityHoursChart": {
-        "description": "In this plot, you can see in which hours of the day you were active for the whole time span of the data you donated. If an hour (square in the plot) has a darker color, you sent more words in that hour than in your average hour. If the color is lighter, then you sent fewer words than in the average case. If you want to look closer at a specific time span you can zoom in by clicking on the graph and holding while you move your mouse to the left or the right to produce the time window you want to zoom into. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "In this figure, you can see in which hours of the day you were active across all chats you donated. If an hour, displayed as a dot in the figure, has a darker color, you sent more words in that hour than in your average per hour. If the color is lighter, then you sent fewer words than in your average hour. If you want to look closer at a specific time, you can zoom in by clicking on the figure and holding while you move your mouse to the left or the right. Click <button>here</button> to see an example with an explanation.",
         "yAxis": "Time",
         "moreThanAverage": "More than your average",
         "average": "Your average",
         "lessThanAverage": "Less than your average",
         "example": {
           "image": "images/charts/feedback_example_dailyActivityHoursPlot_english.svg",
-          "text": "<p><b>(1)</b> In this example, a change in the activity hours can be observed in this area. In the period at <b>(2)</b> you can see that no messages were sent between approximately 8:00 AM and 12:00 PM. Then in the period at <b>(3)</b>, this area of no messages has shifted to the hours between about 2:00 AM and 6:00 AM. This could be due to moving to a different time zone or a change in sleep schedule.</p><p><b>(4)</b> For example, more dark squares can be observed here. Therefore, an above-average number of messages were sent in this period.</p><p><b>(5)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> In this example, a change in your activity hours can be observed in this area. In the period at <b>(2)</b> you can see that no messages were sent between approximately 8:00 AM and 12:00 PM. Then in the period at <b>(3)</b>, this area of no messages has shifted to the hours between about 2:00 AM and 6:00 AM. This could be due to moving to a different time zone or a change in sleep schedule.</p><p><b>(4)</b> For example, more dark dots can be observed here. Therefore, an above-average number of messages were sent in this period.</p><p><b>(5)</b> Click this icon to download the figure.</p>"
         }
       },
       "moreAbout": "More about your Daily Activity Times",
       "dayPartsOverall": {
-        "description": "In this graph, you can see how the words you sent and received are distributed over different parts of the day. You see  averaged values over the entire period of your data donation.",
+        "description": "In this figure, you can see how the words you sent and received are distributed over different parts of the day. You see averaged values over the entire period of your data donation.",
         "legend": {
           "sent": "Sent words",
           "received": "Received words"
@@ -606,7 +621,7 @@
         }
       },
       "dayPartsMonthly": {
-        "description": "Contrary to the graph above, in this graph you can see how the words you sent are distributed over different parts of the day <u>per month</u>.",
+        "description": "Contrary to the figure above, here you can see how the words you sent are distributed across different parts of the day <u>per month</u>.",
         "legend": {
           "sent": "Sent words",
           "received": "Received words"
@@ -618,7 +633,7 @@
     "responseTimes": {
       "title": "Response Times",
       "responseTimeBarChart": {
-        "description": "Here you can see how fast you reply to your contacts and vice versa. You see the percentages of all your responses and the replies from your contacts that took place in the specified time. Responses are messages sent directly after a message from someone else. You can see what percentage of your responses you sent or received quicker than after 1 minute, after 1-2 minutes, 3-5 minutes, 6-15 minutes, 16-30 minutes, 31-60 minutes, and slower than 60 minutes. The bar for > 60 minutes includes longer breaks in the conversation. Click <button>HERE</button> to see an explanation with an example.",
+        "description": "Here you can see how fast you reply to your contacts and the other way around. You see the percentages of all your responses and the replies from your contacts that took place in the specified time. Responses are messages sent directly after a message from someone else. You can see what percentage of your responses you sent or received quicker than after 1 minute, after 1-2 minutes, 3-5 minutes, 6-15 minutes, 16-30 minutes, 31-60 minutes, and slower than 60 minutes. The bar for >60 minutes includes longer breaks in the conversation. Click <button>here</button> to see an example with an explanation.",
         "legend": {
           "donor": "Your Response Times",
           "contacts": "Contacts Response Times"
@@ -627,12 +642,12 @@
         "xAxis": "Time until response",
         "example": {
           "image": "images/charts/feedback_example_responseTimeBarChart_english.svg",
-          "text": "<p><b>(1)</b> In this example you can see that more than 40% of all replies were sent and received in under a minute. Just under 30% of all replies were sent in 1-2 minutes and just under 30% of all replies were received in 1-2 minutes. I.e. a total of around 70% of all sent replies were sent in less than two minutes and around 70% of all received replies were received in less than two minutes.</p><p><b>(2)</b> Click this icon to download the graph.</p>"
+          "text": "<p><b>(1)</b> In this example you can see that more than 40% of all replies were sent and received in under a minute. Just under 30% of all replies were sent in 1-2 minutes and just under 30% of all replies were received in 1-2 minutes. For example, a total of around 70% of all replies were sent in less than two minutes and around 70% of all received replies were received in less than two minutes.</p><p><b>(2)</b> Click this icon to download the figure.</p>"
         }
       },
       "moreAbout": "More about your Response Times",
       "responseTimeBarChartMonthly": {
-        "description": "Here you see your response times <b>per month</b>. So, the figure shows the percentage of responses (i.e. a message that you sent after a message from a contact) that took place in the specified amount of time. You can see what percentage of your responses you sent quicker than after 1 minute, after 1-2 minutes, 3-5 minutes, 6-15 minutes, 16-30 minutes, 31-60 minutes, and slower than 60 minutes. The bar for > 60 minutes includes longer breaks in the conversation.",
+        "description": "Here you see your response times <b>per month</b>. So, the figure shows the percentage of responses (i.e., a response you sent after a message from your contact) that took place in the specified amount of time. You can see what percentage of your responses you sent quicker than after 1 minute, after 1-2 minutes, 3-5 minutes, 6-15 minutes, 16-30 minutes, 31-60 minutes, and slower than 60 minutes. The bar for >60 minutes includes longer breaks in the conversation.",
         "legend": {
           "donor": "Your Response Times",
           "contacts": "Contacts Response Times"
@@ -667,6 +682,6 @@
     "next": "Continue",
     "image": "images/problemReport_eng.png",
     "title": "Problem Report and Suggestions",
-    "body": "If you encounter a problem while using our application or you have other recommendations and feedback for us, please use the \"Report Problem\" button at the top right of the page. We are continuously working to improve the application.<br> Thank you!"
+    "body": "If you encounter a problem while using our website or you have other recommendations and feedback for us, please use the \"Report Problem\" button at the top right of the page. We are continuously working to improve the application.<br> Thank you!"
   }
 }
