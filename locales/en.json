@@ -343,6 +343,7 @@
     },
     "chat-selection": "In the next step, you will receive feedback on your social media patterns, such as the total number of words for these specific contacts and chats. You can select up to {max_num} chats to receive focused feedback on, but you <b>must</b> select at least {min_num}. The chats currently selected are the {default_num} with the highest word count in messages. This feedback is not saved and will be removed as soon as you leave the page.",
     "sending-wait": "Sending the data could take a few minutes. Please wait and keep this website open. Thanks!",
+    "sending-batch-progress": "Uploading batch {current} of {total}...",
     "alias-not-required": "Not required",
     "alias": "Username",
     "please-insert-alias": "Please enter your username to enable anonymization.",
