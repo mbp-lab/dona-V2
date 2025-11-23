@@ -1,5 +1,11 @@
 import { describe, expect, it } from "@jest/globals";
-import { parseYearMonth, monthDiff, monthsBetweenInclusive, sparseMarks, SliderMark } from "@services/charts/sliderUtils";
+import {
+  parseYearMonth,
+  monthDiff,
+  monthsBetweenInclusive,
+  sparseMarks,
+  SliderMark
+} from "@services/charts/sliderUtils";
 
 describe("sliderUtils", () => {
   describe("parseYearMonth", () => {

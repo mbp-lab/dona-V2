@@ -49,7 +49,10 @@ export default function DonationFeedbackPage() {
   }, [feedbackData, setDonationData]);
 
   const handleContinue = () => {
-    window.location.href = isFeedbackSurveyEnabled && feedbackSurveyLink ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/";
+    window.location.href =
+      isFeedbackSurveyEnabled && feedbackSurveyLink
+        ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}`
+        : "/";
   };
 
   return (
