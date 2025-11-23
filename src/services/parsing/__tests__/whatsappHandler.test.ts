@@ -1,15 +1,8 @@
 import { describe, it, expect } from "@jest/globals";
 import { makeArrayOfMessages, parseMessages } from "@services/parsing/whatsapp/whatsappParser";
 
-// Mock aliasConfig to avoid next-intl dependency in tests
-jest.mock("@services/parsing/shared/aliasConfig", () => ({
-  getAliasConfig: () => ({
-    systemAlias: "System",
-    contactAlias: "Contact",
-    donorAlias: "Donor",
-    chatAlias: "Chat"
-  })
-}));
+// Mock aliasConfig to avoid next-intl dependency
+jest.mock("@services/parsing/shared/aliasConfig", () => require("@services/__mocks__/aliasConfigMock"));
 
 describe("WhatsApp Parser", () => {
   describe("makeArrayOfMessages", () => {

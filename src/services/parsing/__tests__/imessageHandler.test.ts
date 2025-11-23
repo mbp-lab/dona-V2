@@ -1,4 +1,4 @@
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it } from "@jest/globals";
 
 import { DataSourceValue } from "@models/processed";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
@@ -11,6 +11,9 @@ jest.mock("sql.js/dist/sql-wasm.js", () => ({
     })
   )
 }));
+
+// Mock aliasConfig to avoid next-intl dependency
+jest.mock("@services/parsing/shared/aliasConfig", () => require("@services/__mocks__/aliasConfigMock"));
 
 describe("iMessage Handler", () => {
   describe("Unit Tests - Database File Validation", () => {
