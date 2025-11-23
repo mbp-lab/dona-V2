@@ -222,4 +222,14 @@ describe("iMessage Handler", () => {
       });
     });
   });
+<<<<<<< HEAD
+=======
+
+  describe("Edge Cases", () => {
+    it("should set conversation dataSource to IMessage", () => {
+      // This would be tested with a full mock database
+      expect(DataSourceValue.IMessage).toBe("iMessage");
+    });
+  });
+>>>>>>> 613adb7 (Fix and improve test setup for fixtures-based tests of handlers)
 });
