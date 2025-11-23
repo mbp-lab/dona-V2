@@ -22,7 +22,7 @@ const jestConfig = async (): Promise<Config> => {
     transform: { "^.+\\.tsx?$": "ts-jest" },
     moduleNameMapper: commonModuleNameMapper,
     globals: { "ts-jest": { tsconfig: "<rootDir>/tsconfig.json" } },
-    transformIgnorePatterns: ["node_modules/(?!(@journeyapps/wa-sqlite)/)"]
+    // transformIgnorePatterns: ["node_modules/(?!(@journeyapps/wa-sqlite)/)"]
   };
 
   const unitCustom = {
