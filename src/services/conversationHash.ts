@@ -3,10 +3,23 @@ import { Conversation, Message, MessageAudio } from "@models/processed";
 import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 
 /**
- * Computes a SHA-256 hash for a conversation based on its messages.
+ * Groups a timestamp (in milliseconds) to a YYYY-MM string.
+ */
+function getMonthKey(timestamp: number): string {
+  const date = new Date(timestamp);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
+/**
+ * Computes an array of SHA-256 hashes for a conversation, one per calendar month.
  *
- * The hash is computed from all messages in a conversation (both text and audio)
- * to enable duplicate detection. The hash includes:
+ * Each hash is computed from all messages (both text and audio) in that month
+ * to enable partial duplicate detection. If new messages are added to a conversation
+ * in a later month, only that month's hash changes—existing months still match.
+ *
+ * The hash for each month includes:
  * - For regular messages: timestamp, wordCount, senderRole ("ego" | "alter")
  * - For audio messages: timestamp, lengthSeconds, senderRole ("ego" | "alter")
  *
@@ -14,9 +27,9 @@ import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
  * regardless of the order in which messages appear in the input.
  *
  * @param conversation - The conversation to hash
- * @returns A SHA-256 hash as a hexadecimal string, or null if conversation has no messages
+ * @returns An array of SHA-256 hashes as hexadecimal strings (one per month), or null if conversation has no messages
  */
-export function computeConversationHash(conversation: Conversation): string | null {
+export function computeConversationHash(conversation: Conversation): string[] | null {
   const textMessages = conversation.messages || [];
   const audioMessages = conversation.messagesAudio || [];
 
@@ -52,16 +65,33 @@ export function computeConversationHash(conversation: Conversation): string | nu
     }))
   ];
 
-  // Sort by timestamp to ensure consistent ordering
-  messageData.sort((a, b) => a.timestamp - b.timestamp);
+  // Group messages by month
+  const messagesByMonth: Map<string, MessageData[]> = new Map();
+  for (const msg of messageData) {
+    const monthKey = getMonthKey(msg.timestamp);
+    if (!messagesByMonth.has(monthKey)) {
+      messagesByMonth.set(monthKey, []);
+    }
+    messagesByMonth.get(monthKey)!.push(msg);
+  }
 
-  // Convert to a stable string representation
-  const dataString = JSON.stringify(messageData);
+  // Sort month keys to ensure consistent ordering of output array
+  const sortedMonths = Array.from(messagesByMonth.keys()).sort();
 
-  // Compute SHA-256 hash
-  const hash = createHash("sha256");
-  hash.update(dataString);
-  return hash.digest("hex");
+  // Compute hash for each month
+  const monthlyHashes: string[] = [];
+  for (const monthKey of sortedMonths) {
+    const monthMessages = messagesByMonth.get(monthKey)!;
+    // Sort messages within the month by timestamp
+    monthMessages.sort((a, b) => a.timestamp - b.timestamp);
+
+    const dataString = JSON.stringify(monthMessages);
+    const hash = createHash("sha256");
+    hash.update(dataString);
+    monthlyHashes.push(hash.digest("hex"));
+  }
+
+  return monthlyHashes;
 }
 
 /**

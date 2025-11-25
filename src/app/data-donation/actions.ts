@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/db/drizzle";
@@ -244,44 +244,40 @@ export async function finalizeDonation(
 }
 
 /**
- * Checks if any of the provided conversation hashes already exist in the database.
- * This is used to detect duplicate donations before uploading.
+ * Checks if any of the provided conversation hash arrays overlap with existing ones in the database.
+ * Uses PostgreSQL's array overlap operator (&&) to detect partial re-donations.
  *
- * @param hashes - Array of conversation hashes to check
+ * @param hashArrays - Array of conversation hash arrays (each conversation has multiple monthly hashes)
  * @param dbClient - Database client (defaults to db)
  * @returns ActionResult with success=false if duplicates found, success=true otherwise
  */
 export async function checkForDuplicateConversations(
-  hashes: string[],
+  hashArrays: string[][],
   dbClient: DbClient = db
 ): Promise<ActionResult<{ hasDuplicates: boolean }>> {
-  console.log(`[DONATION] checkForDuplicateConversations: checking ${hashes.length} hashes`);
+  console.log(`[DONATION] checkForDuplicateConversations: checking ${hashArrays.length} conversation hash arrays`);
 
   try {
-    // Filter out null/empty hashes
-    const validHashes = hashes.filter(h => h && h.length > 0);
+    // Flatten all hashes into a single array for overlap checking
+    const allHashes = hashArrays.flat().filter(h => h && h.length > 0);
 
-    if (validHashes.length === 0) {
+    if (allHashes.length === 0) {
       console.log(`[DONATION] ✅ checkForDuplicateConversations: no valid hashes to check`);
       return { success: true, data: { hasDuplicates: false } };
     }
 
-    // Query database for existing conversations with these hashes
-    const existingConversations = await dbClient.query.conversations.findMany({
-      where: (conversations: any, { inArray }: { inArray: any }) => inArray(conversations.conversationHash, validHashes),
-      columns: {
-        conversationHash: true
-      }
-    });
-
-    const hasDuplicates = existingConversations.length > 0;
+    // Use raw SQL with array overlap operator (&&) for efficient detection
+    // Check if any existing conversation_hash array overlaps with our combined hash set
+    // The ::text[] cast is required for PostgreSQL to properly compare the array parameter
+    const result = await dbClient.execute(sql`SELECT 1 FROM conversations WHERE conversation_hash && ${allHashes}::text[] LIMIT 1`);
+    const hasDuplicates = result.rows.length > 0;
 
     if (hasDuplicates) {
-      console.log(`[DONATION] ❌ checkForDuplicateConversations: found ${existingConversations.length} duplicate(s)`);
+      console.log(`[DONATION] ❌ checkForDuplicateConversations: found duplicate(s)`);
       return {
         success: false,
         error: DonationProcessingError(DonationErrors.DuplicateConversation, {
-          duplicateCount: existingConversations.length
+          duplicateCount: 1
         })
       };
     }

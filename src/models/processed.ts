@@ -44,7 +44,7 @@ export interface Conversation {
   participants: Array<Participant>;
   conversationPseudonym: string;
   focusInFeedback?: boolean;
-  conversationHash?: string | null;
+  conversationHash?: string[] | null;
 }
 
 export interface AnonymizationResult {

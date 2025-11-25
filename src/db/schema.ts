@@ -31,10 +31,10 @@ export const conversations = p.pgTable(
       .references(() => donations.id),
     conversationPseudonym: p.varchar("conversation_pseudonym", { length: 20 }).notNull(),
     focusInFeedback: p.boolean("focus_in_feedback").default(true).notNull(),
-    conversationHash: p.text("conversation_hash")
+    conversationHash: p.text("conversation_hash").array()
   },
   table => ({
-    conversationHashIdx: p.index("conversation_hash_idx").on(table.conversationHash)
+    conversationHashIdx: p.index("conversation_hash_idx").using("gin", table.conversationHash)
   })
 );
 

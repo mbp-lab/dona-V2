@@ -106,36 +106,27 @@ describe("donation actions - unit", () => {
 
   test("checkForDuplicateConversations returns hasDuplicates=false when no duplicate hashes exist", async () => {
     const overriding = createMockDbClient({
-      query: {
-        conversations: {
-          findMany: jest.fn(async (_opts?: any): Promise<any[]> => [])
-        }
-      }
+      execute: jest.fn(async (_sql?: any): Promise<any> => ({ rows: [] }))
     } as any).client;
 
-    const hashes = ["hash-a", "hash-b"];
-    const res = await checkForDuplicateConversations(hashes, overriding);
+    const hashArrays = [["hash-a", "hash-b"], ["hash-c"]];
+    const res = await checkForDuplicateConversations(hashArrays, overriding);
 
-    expect(overriding.query!.conversations!.findMany).toHaveBeenCalled();
+    expect(overriding.execute).toHaveBeenCalled();
     expect(res.success).toBe(true);
     expect(res.data).toBeDefined();
     expect(res.data!.hasDuplicates).toBe(false);
   });
 
   test("checkForDuplicateConversations returns DuplicateConversation error when duplicates exist", async () => {
-    const existing = [{ id: "existing-1", conversationHash: "hash-a" }];
     const overriding = createMockDbClient({
-      query: {
-        conversations: {
-          findMany: jest.fn(async (_opts?: any): Promise<any[]> => existing)
-        }
-      }
+      execute: jest.fn(async (_sql?: any): Promise<any> => ({ rows: [{ "?column?": 1 }] }))
     } as any).client;
 
-    const hashes = ["hash-a", "hash-b"];
-    const res = await checkForDuplicateConversations(hashes, overriding);
+    const hashArrays = [["hash-a", "hash-b"], ["hash-c"]];
+    const res = await checkForDuplicateConversations(hashArrays, overriding);
 
-    expect(overriding.query!.conversations!.findMany).toHaveBeenCalled();
+    expect(overriding.execute).toHaveBeenCalled();
     expect(res.success).toBe(false);
     expect(res.error).toBeDefined();
     expect((res.error as any).reason).toBe(DonationErrors.DuplicateConversation);
