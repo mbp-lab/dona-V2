@@ -84,9 +84,7 @@ describe("computeConversationHash", () => {
   });
 
   it("should produce separate hashes for different months", () => {
-    // January 2024 timestamp (roughly Jan 15, 2024)
     const jan2024 = new Date("2024-01-15T12:00:00Z").getTime();
-    // February 2024 timestamp (roughly Feb 15, 2024)
     const feb2024 = new Date("2024-02-15T12:00:00Z").getTime();
 
     const conversation: Conversation = {

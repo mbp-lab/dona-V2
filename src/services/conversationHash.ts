@@ -82,9 +82,7 @@ export function computeConversationHash(conversation: Conversation): string[] | 
   const monthlyHashes: string[] = [];
   for (const monthKey of sortedMonths) {
     const monthMessages = messagesByMonth.get(monthKey)!;
-    // Sort messages within the month by timestamp
     monthMessages.sort((a, b) => a.timestamp - b.timestamp);
-
     const dataString = JSON.stringify(monthMessages);
     const hash = createHash("sha256");
     hash.update(dataString);

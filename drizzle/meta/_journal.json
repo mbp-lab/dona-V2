@@ -85,6 +85,13 @@
       "when": 1763137612765,
       "tag": "0011_add-conversation-hash",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1764114630409,
+      "tag": "0012_conversation_hash_to_list_of_hashes",
+      "breakpoints": true
     }
   ]
 }
