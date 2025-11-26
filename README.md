@@ -19,8 +19,11 @@ The previous version of the application is available in the legacy repository: h
 
 ## Overview
 
-- **Tech stack**: Next.js 15 (App Router), React 19, TypeScript, Drizzle ORM + PostgreSQL, next-intl, PNPM, Docker.
-- **Primary features**: local-first data processing, pseudonymization, donation workflow, analytics previews.
+- **Tech stack**: Next.js 15 (App Router), React 19, TypeScript, Drizzle ORM + PostgreSQL, next-intl, PNPM, Docker.- **Primary features**:
+  - Local-first data processing,
+  - Pseudonymization and de-identification,
+  - Donation workflow with duplicate detection (monthly hash-based),
+  - Analytics visualisations.
 
 ## Repository Architecture
 

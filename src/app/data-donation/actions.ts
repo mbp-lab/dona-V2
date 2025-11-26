@@ -266,11 +266,14 @@ export async function checkForDuplicateConversations(
       return { success: true, data: { hasDuplicates: false } };
     }
 
-    // Use raw SQL with array overlap operator (&&) for efficient detection
-    // Check if any existing conversation_hash array overlaps with our combined hash set
-    // The ::text[] cast is required for PostgreSQL to properly compare the array parameter
-    const result = await dbClient.execute(sql`SELECT 1 FROM conversations WHERE conversation_hash && ${allHashes}::text[] LIMIT 1`);
-    const hasDuplicates = result.rows.length > 0;
+    // prettier-ignore
+    const hashArray = sql. join(allHashes.map(h => sql`${h}`), sql`, `);
+    const existingConversations = await dbClient
+      .select({ hash: conversations.conversationHash })
+      .from(conversations)
+      .where(sql`${conversations.conversationHash} && ARRAY[${hashArray}]`);
+
+    const hasDuplicates = existingConversations.length > 0;
 
     if (hasDuplicates) {
       console.log(`[DONATION] ❌ checkForDuplicateConversations: found duplicate(s)`);
