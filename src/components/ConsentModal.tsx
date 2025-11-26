@@ -10,7 +10,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useLocale } from "next-intl";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { checkDonorIdExists } from "@/app/instructions/actions";
 import { generateExternalDonorId, useDonation } from "@/context/DonationContext";
@@ -31,6 +31,7 @@ export default function ConsentModal() {
   const errors = useRichTranslations("donation.errors");
   const { externalDonorId, setExternalDonorId } = useDonation();
   const locale = useLocale();
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -70,14 +71,17 @@ export default function ConsentModal() {
   const handleManualIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newId = e.target.value;
     setManualId(newId);
+    setIdError(null); // Clear error immediately on input
 
-    // Debounce validation to avoid too many requests
-    const timeoutId = setTimeout(() => {
+    // Clear previous timeout
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+
+    // Set new timeout
+    debounceTimerRef.current = setTimeout(() => {
       validateDonorId(newId);
     }, 500);
-
-    return () => clearTimeout(timeoutId);
   };
+
   const handleAgree = () => {
     if (idInputMethod === IdInputMethod.MANUALLY && manualId.trim()) {
       if (idError) {
@@ -86,7 +90,8 @@ export default function ConsentModal() {
       setExternalDonorId(manualId);
     }
 
-    window.location.href = isDonorSurveyEnabled && donorSurveyLink ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/data-donation";
+    window.location.href =
+      isDonorSurveyEnabled && donorSurveyLink ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/data-donation";
   };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -97,7 +102,12 @@ export default function ConsentModal() {
       <Button variant="contained" onClick={handleOpen}>
         {actions.t("donate")}
       </Button>
-      <FullSizeModal open={open} onClose={handleClose} onAgree={idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true)} ariaLabel="Consent Modal">
+      <FullSizeModal
+        open={open}
+        onClose={handleClose}
+        onAgree={idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true)}
+        ariaLabel="Consent Modal"
+      >
         <Box sx={{ display: "flex" }}>
           <Typography variant="h4" sx={{ my: 4, flexGrow: 1 }} id="modal-modal-title">
             {consent.t("title")}
@@ -147,7 +157,15 @@ export default function ConsentModal() {
             )}
             {idInputMethod === IdInputMethod.MANUALLY && (
               <>
-                <TextField label={donor.t("yourId")} value={manualId} onChange={handleManualIdChange} fullWidth sx={{ mt: 1 }} error={!!idError} helperText={<span style={{ minHeight: "1em", display: "block" }}>{idError || "\u00A0"}</span>} disabled={isValidating} />
+                <TextField
+                  label={donor.t("yourId")}
+                  value={manualId}
+                  onChange={handleManualIdChange}
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  error={!!idError}
+                  helperText={<span style={{ minHeight: "1em", display: "block" }}>{idError || "\u00A0"}</span>}
+                />
               </>
             )}
           </DialogContent>
@@ -157,7 +175,11 @@ export default function ConsentModal() {
                 <Button onClick={handleDialogClose}>{actions.t("close")}</Button>
               </Box>
               <Box>
-                <Button onClick={handleAgree} variant="contained" disabled={idInputMethod === IdInputMethod.MANUALLY && (!!idError || !manualId.trim() || isValidating)}>
+                <Button
+                  onClick={handleAgree}
+                  variant="contained"
+                  disabled={idInputMethod === IdInputMethod.MANUALLY && (!!idError || !manualId.trim() || isValidating)}
+                >
                   {actions.t("next")}
                 </Button>
               </Box>
