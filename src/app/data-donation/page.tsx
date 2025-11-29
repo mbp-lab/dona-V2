@@ -26,7 +26,8 @@ import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@compon
 import { Conversation, DataSourceValue } from "@models/processed";
 import { getErrorMessage } from "@services/errors";
 
-import { appendConversationBatch, finalizeDonation, startDonation } from "./actions";
+import { appendConversationBatch, finalizeDonation, logClientError, startDonation } from "./actions";
+import { calculateDonationStats } from "@services/donationStats";
 
 const CONVERSATION_BATCH_SIZE = 250;
 
@@ -89,8 +90,11 @@ export default function DataDonationPage() {
     if (allConversations.length > 0) {
       console.log(`[DONATION] Starting donation with ${allConversations.length} conversations.`);
       try {
+        // Calculate donation stats for logging
+        const stats = calculateDonationStats(allConversations);
+
         // 1) Start donation and get IDs
-        const start = await startDonation(externalDonorId);
+        const start = await startDonation(externalDonorId, stats);
         if (!start.success || !start.data) throw start.error;
         const { donationId, donorId } = start.data;
 
@@ -115,6 +119,7 @@ export default function DataDonationPage() {
         router.push("/donation-feedback");
       } catch (err) {
         console.log("[DONATION] Error during donation:", err);
+        await logClientError(err, "onDataDonationUpload");
         setErrorMessage(getErrorMessage(donation.t, err as any));
       } finally {
         // clear batch UI state and loading
