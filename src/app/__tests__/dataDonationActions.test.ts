@@ -1,12 +1,7 @@
 import { beforeEach, describe, expect, test, jest } from "@jest/globals";
 
 import { createMockDbClient } from "@/app/__tests__/mockDbClient";
-import {
-  appendConversationBatch,
-  finalizeDonation,
-  startDonation,
-  checkForDuplicateConversations
-} from "@/app/data-donation/actions";
+import { appendConversationBatch, finalizeDonation, startDonation, checkForDuplicateConversations } from "@/app/data-donation/actions";
 import { DonationErrors } from "@/services/errors";
 
 describe("donation actions - unit", () => {
@@ -18,7 +13,7 @@ describe("donation actions - unit", () => {
 
   test("startDonation returns donationId and donorId on success", async () => {
     const { client } = mock;
-    const res = await startDonation(undefined, client);
+    const res = await startDonation(undefined, undefined, client);
     expect(res.success).toBe(true);
     expect(res.data).toBeDefined();
     expect(typeof res.data!.donationId).toBe("string");
@@ -35,7 +30,7 @@ describe("donation actions - unit", () => {
         }) as any
     }).client;
 
-    const res = await startDonation("ext-1", throwing);
+    const res = await startDonation("ext-1", undefined, throwing);
     expect(res.success).toBe(false);
     expect(res.error).toBeDefined();
     expect((res.error as any).reason).toBe(DonationErrors.TransactionFailed);

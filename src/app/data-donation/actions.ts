@@ -8,6 +8,7 @@ import { conversationParticipants, conversations, donations, graphData, messages
 import { DbClient } from "@/db/types";
 import { NewConversation, NewMessage, NewMessageAudio } from "@models/persisted";
 import { Conversation, DonationStatus } from "@models/processed";
+import { DonationStats } from "@services/donationStats";
 import { DonationErrors, DonationProcessingError, SerializedDonationError } from "@services/errors";
 
 const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
@@ -25,11 +26,15 @@ function generateExternalDonorId(): string {
 
 export async function startDonation(
   externalDonorId?: string,
+  stats?: DonationStats,
   dbClient: DbClient = db
 ): Promise<ActionResult<{ donationId: string; donorId: string }>> {
   const donorId = uuidv4();
   const externalIdToUse = externalDonorId || generateExternalDonorId();
   console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
+  if (stats) {
+    console.log(`[DONATION][donorId=${donorId}] Stats: ${JSON.stringify(stats, null, 2)}`);
+  }
   try {
     const inserted = await dbClient
       .insert(donations)
@@ -68,9 +73,7 @@ export async function appendConversationBatch(
   donorAlias: string,
   dbClient: DbClient = db
 ): Promise<ActionResult<{ inserted: number }>> {
-  console.log(
-    `[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`
-  );
+  console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
 
   try {
     const dataSources = (await dbClient.query.dataSources.findMany()) as any;
@@ -265,8 +268,7 @@ export async function checkForDuplicateConversations(
 
     // Query database for existing conversations with these hashes
     const existingConversations = await dbClient.query.conversations.findMany({
-      where: (conversations: any, { inArray }: { inArray: any }) =>
-        inArray(conversations.conversationHash, validHashes),
+      where: (conversations: any, { inArray }: { inArray: any }) => inArray(conversations.conversationHash, validHashes),
       columns: {
         conversationHash: true
       }
@@ -296,4 +298,18 @@ export async function checkForDuplicateConversations(
       error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
     };
   }
+}
+
+/**
+ * Logs client-side errors to the server for debugging purposes.
+ * @param error - The error object to log
+ * @param context - Optional context string to identify where the error occurred
+ */
+export async function logClientError(error: any, context?: string): Promise<void> {
+  const errorMessage = error?.message || String(error);
+  const errorStack = error?.stack || "No stack trace available";
+
+  console.error(`[CLIENT ERROR]${context ? `[${context}]` : ""} ${errorMessage}`, {
+    stack: errorStack
+  });
 }
