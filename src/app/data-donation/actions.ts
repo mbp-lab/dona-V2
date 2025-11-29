@@ -33,7 +33,7 @@ export async function startDonation(
   const externalIdToUse = externalDonorId || generateExternalDonorId();
   console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
   if (stats) {
-    console.log(`[DONATION][donorId=${donorId}] Stats: ${JSON.stringify(stats)}`);
+    console.log(`[DONATION][donorId=${donorId}] Stats: ${JSON.stringify(stats, null, 2)}`);
   }
   try {
     const inserted = await dbClient

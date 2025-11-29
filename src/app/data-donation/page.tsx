@@ -119,7 +119,10 @@ export default function DataDonationPage() {
         router.push("/donation-feedback");
       } catch (err) {
         console.log("[DONATION] Error during donation:", err);
-        await logClientError(err, "onDataDonationUpload");
+        await logClientError(
+          err,
+          `onDataDonationUpload - ${totalBatches === 0 ? "before startDonation" : `after startDonation, before batch ${currentBatchIndex || 1}/${totalBatches}`}`
+        );
         setErrorMessage(getErrorMessage(donation.t, err as any));
       } finally {
         // clear batch UI state and loading
