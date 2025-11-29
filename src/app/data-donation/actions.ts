@@ -33,9 +33,15 @@ export async function startDonation(
   let stats: DonationStats | undefined;
   let dbClient: DbClient;
 
-  if (statsOrDbClient && "totalConversations" in statsOrDbClient) {
-    // Second arg is DonationStats
-    stats = statsOrDbClient as DonationStats;
+  // Type guard: DonationStats has all these numeric properties, DbClient has methods like insert/query
+  const isDonationStats = (obj: any): obj is DonationStats =>
+    obj &&
+    typeof obj.totalConversations === "number" &&
+    typeof obj.totalMessages === "number" &&
+    typeof obj.meanMessagesPerConversation === "number";
+
+  if (isDonationStats(statsOrDbClient)) {
+    stats = statsOrDbClient;
     dbClient = dbClientArg ?? db;
   } else if (statsOrDbClient) {
     // Second arg is DbClient (backward compatibility)
