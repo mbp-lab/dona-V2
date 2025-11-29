@@ -26,33 +26,9 @@ function generateExternalDonorId(): string {
 
 export async function startDonation(
   externalDonorId?: string,
-  statsOrDbClient?: DonationStats | DbClient,
-  dbClientArg?: DbClient
+  stats?: DonationStats,
+  dbClient: DbClient = db
 ): Promise<ActionResult<{ donationId: string; donorId: string }>> {
-  // Handle backward compatibility: detect if second arg is stats or dbClient
-  let stats: DonationStats | undefined;
-  let dbClient: DbClient;
-
-  // Type guard: DonationStats has all these numeric properties, DbClient has methods like insert/query
-  const isDonationStats = (obj: any): obj is DonationStats =>
-    obj &&
-    typeof obj.totalConversations === "number" &&
-    typeof obj.totalMessages === "number" &&
-    typeof obj.meanMessagesPerConversation === "number";
-
-  if (isDonationStats(statsOrDbClient)) {
-    stats = statsOrDbClient;
-    dbClient = dbClientArg ?? db;
-  } else if (statsOrDbClient) {
-    // Second arg is DbClient (backward compatibility)
-    stats = undefined;
-    dbClient = statsOrDbClient as DbClient;
-  } else {
-    // No second arg
-    stats = undefined;
-    dbClient = dbClientArg ?? db;
-  }
-
   const donorId = uuidv4();
   const externalIdToUse = externalDonorId || generateExternalDonorId();
   console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
