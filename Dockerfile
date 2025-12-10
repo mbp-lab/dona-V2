@@ -9,6 +9,8 @@ ARG FEEDBACK_SURVEY_LINK
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
+RUN mkdir -p public/sql-wasm
+
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
 COPY . .
