@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { NextIntlClientProvider } from "next-intl";
@@ -17,7 +17,7 @@ import Button from "@mui/material/Button";
 
 import { DonationProvider } from "@/context/DonationContext";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Dona",
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang={locale}>
-      <body className={inter.className} style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <body style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <NextIntlClientProvider messages={messages}>
           <DonationProvider>
             <CssBaseline />
