@@ -3,7 +3,6 @@ import { BlobReader, BlobWriter, Entry, EntryMetaData, TextWriter, ZipReader } f
 // Custom type for entries with getData
 export interface ValidEntry extends EntryMetaData {
   getData: (writer: TextWriter | BlobWriter) => Promise<any>;
-  directory: boolean;
 }
 
 // Type guard to check for valid entries
