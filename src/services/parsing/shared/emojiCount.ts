@@ -1,4 +1,4 @@
-import { EMOJI_REGEX } from "./emojiDictionary";
+import { EMOJI_REGEX } from "./emojiRegex";
 
 /**
  * Counts emojis in a message and returns a map of emoji -> count

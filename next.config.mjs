@@ -22,20 +22,30 @@ const nextConfig = {
     NEXT_PUBLIC_FEEDBACK_SURVEY_LINK: env.FEEDBACK_SURVEY_LINK,
   },
   allowedDevOrigins: devOrigins,
+  // Tell Next.js to not bundle sql.js on the server side
+  serverComponentsExternalPackages: ['sql.js'],
   experimental: {
     serverActions: {
       bodySizeLimit: "500mb",
       allowedOrigins: [...devOrigins, "https://nyu.dona.tf.uni-bielefeld.de"],
     },
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     // Ignores fs module so that sql.js can be used in the browser
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      path: false,
-      crypto: false,
-    };
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+      };
+      // Also add alias to ensure fs is not bundled
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        fs: false,
+        path: false,
+      };
+    }
     // Allows loading svg from .svg file
     config.module.rules.push({
       test: /\.svg$/,
