@@ -28,6 +28,8 @@ const nextConfig = {
       allowedOrigins: [...devOrigins, "https://nyu.dona.tf.uni-bielefeld.de"],
     },
   },
+  // Tell Next.js to skip bundling sql.js - it will be loaded dynamically at runtime
+  transpilePackages: [],
   webpack: (config, { isServer }) => {
     // Ignores fs module so that sql.js can be used in the browser
     if (!isServer) {
@@ -43,6 +45,12 @@ const nextConfig = {
         fs: false,
         path: false,
       };
+      // Mark sql.js as external for client bundles - it will be loaded via CDN or dynamic import
+      config.externals = config.externals || [];
+      config.externals.push({
+        'sql.js': 'sql.js',
+        'sql.js/dist/sql-wasm.js': 'sql.js'
+      });
     }
     // Allows loading svg from .svg file
     config.module.rules.push({
