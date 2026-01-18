@@ -22,8 +22,6 @@ const nextConfig = {
     NEXT_PUBLIC_FEEDBACK_SURVEY_LINK: env.FEEDBACK_SURVEY_LINK,
   },
   allowedDevOrigins: devOrigins,
-  // Tell Next.js to not bundle sql.js on the server side
-  serverComponentsExternalPackages: ['sql.js'],
   experimental: {
     serverActions: {
       bodySizeLimit: "500mb",

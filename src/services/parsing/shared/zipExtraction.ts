@@ -1,12 +1,10 @@
-import { BlobReader, BlobWriter, Entry, EntryMetaData, TextWriter, ZipReader } from "@zip.js/zip.js";
+import { BlobReader, BlobWriter, Entry, FileEntry, TextWriter, ZipReader } from "@zip.js/zip.js";
 
-// Custom type for entries with getData
-export interface ValidEntry extends EntryMetaData {
-  getData: (writer: TextWriter | BlobWriter) => Promise<any>;
-}
+// Custom type for entries with getData - this is essentially FileEntry
+export type ValidEntry = FileEntry;
 
 // Type guard to check for valid entries
-const isValidEntry = (entry: Entry): entry is ValidEntry => typeof entry.getData === "function";
+const isValidEntry = (entry: Entry): entry is ValidEntry => typeof (entry as any).getData === "function" && !entry.directory;
 
 // Check if entry should be excluded (e.g., system files or folders)
 const isExcludedEntry = (entry: Entry): boolean =>

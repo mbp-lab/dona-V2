@@ -6,14 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "next lint",
     "test": "jest",
     "prepare": "husky || mkdir -p public/sql-wasm && cp node_modules/sql.js/dist/*.wasm public/sql-wasm/"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
+      "prettier --write"
     ],
     "*.{json,css,md}": [
       "prettier --write"
