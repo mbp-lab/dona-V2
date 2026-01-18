@@ -13,7 +13,7 @@ const jestConfig = async (): Promise<Config> => {
   const commonModuleNameMapper = {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^@models/(.*)$": "<rootDir>/src/models/$1",
-    "^@services/(.*)$": "<rootDir>/src/services/$1",
+    "^@services/(.*)$": "<rootDir>/src/services/$1"
   };
 
   const baseCustom = {
@@ -22,26 +22,27 @@ const jestConfig = async (): Promise<Config> => {
     transform: { "^.+\\.tsx?$": "ts-jest" },
     moduleNameMapper: commonModuleNameMapper,
     globals: { "ts-jest": { tsconfig: "<rootDir>/tsconfig.json" } },
+    transformIgnorePatterns: ["node_modules/(?!(@journeyapps/wa-sqlite)/)"]
   };
 
   const unitCustom = {
     ...baseCustom,
     displayName: "unit",
-    testMatch: ["**/__tests__/**/*.unit.test.*", "**/__tests__/**/*.test.ts?(x)"],
+    testMatch: ["**/__tests__/**/*.unit.test.*", "**/__tests__/**/*.test.ts?(x)"]
   };
 
   const integrationCustom = {
     ...baseCustom,
     displayName: "integration",
     testMatch: ["**/__tests__/**/*.int.test.*"],
-    testTimeout: 30000 as number,
+    testTimeout: 30000 as number
   };
 
   const unitConfig = await createJestConfig(unitCustom)();
   const integrationConfig = await createJestConfig(integrationCustom)();
 
   return {
-    projects: [unitConfig, integrationConfig],
+    projects: [unitConfig, integrationConfig]
   };
 };
 

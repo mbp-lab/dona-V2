@@ -8,7 +8,7 @@ import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 import emojiCount from "@services/parsing/shared/emojiCount";
 
 interface WaSQLiteDB {
-  api: SQLite.SQLiteAPI;
+  api: SQLiteAPI;
   db: number;
 }
 
@@ -109,17 +109,40 @@ async function createDatabase(file: File): Promise<WaSQLiteDB> {
   const sqlite3 = SQLite.Factory(module);
   const api = sqlite3;
 
-  // Open database
+  // Read the file data
+  const fileBuffer = await file.arrayBuffer();
+
+  // Create and register a custom VFS that has the file pre-loaded
+  const vfs = await createVFSWithFile(module, "imessage.db", fileBuffer);
+  api.vfs_register(vfs, true);
+
+  // Open the database (it will now read from our pre-populated VFS)
   const db = await api.open_v2("imessage.db");
 
-  // Read the file as an ArrayBuffer and load into the database
-  const fileBuffer = await file.arrayBuffer();
-  const bytes = new Uint8Array(fileBuffer);
-
-  // Write the database content
-  await api.deserialize(db, bytes);
-
   return { api, db };
+}
+
+// Create a simple in-memory VFS with a pre-loaded database file
+async function createVFSWithFile(module: any, filename: string, data: ArrayBuffer) {
+  // Import MemoryAsyncVFS
+  const { MemoryAsyncVFS } = await import("@journeyapps/wa-sqlite/src/examples/MemoryAsyncVFS.js");
+
+  // Create the VFS using the static create method
+  const vfs: any = await (MemoryAsyncVFS as any).create("imessage-vfs", module);
+
+  // Pre-populate the file in the VFS
+  // We do this by accessing the internal map directly
+  const url = new URL(filename, "file://");
+  const pathname = url.pathname;
+
+  vfs.mapNameToFile.set(pathname, {
+    pathname,
+    flags: 0,
+    size: data.byteLength,
+    data: data
+  });
+
+  return vfs;
 }
 
 // Helper function to get messages from the database
@@ -145,10 +168,8 @@ async function getMessages(dbObj: WaSQLiteDB): Promise<any[]> {
     WHERE m.error = 0 AND c.group_id IS NOT NULL;
   `;
 
-  // Prepare and execute the statement
-  const stmt = await api.prepare(db, sql);
-
-  try {
+  // Use the statements iterator API
+  for await (const stmt of api.statements(db, sql)) {
     const cols = api.column_names(stmt);
 
     while ((await api.step(stmt)) === SQLite.SQLITE_ROW) {
@@ -158,8 +179,6 @@ async function getMessages(dbObj: WaSQLiteDB): Promise<any[]> {
       }
       messages.push(row);
     }
-  } finally {
-    await api.finalize(stmt);
   }
 
   return messages;
@@ -176,18 +195,13 @@ async function getGroupChats(dbObj: WaSQLiteDB): Promise<Map<string, string>> {
     WHERE group_id IS NOT NULL;
   `;
 
-  const stmt = await api.prepare(db, sql);
-
-  try {
-    const cols = api.column_names(stmt);
-
+  // Use the statements iterator API
+  for await (const stmt of api.statements(db, sql)) {
     while ((await api.step(stmt)) === SQLite.SQLITE_ROW) {
       const group_id = String(api.column(stmt, 0) ?? "");
       const display_name = String(api.column(stmt, 1) ?? "");
       groupChats.set(group_id, display_name);
     }
-  } finally {
-    await api.finalize(stmt);
   }
 
   return groupChats;
