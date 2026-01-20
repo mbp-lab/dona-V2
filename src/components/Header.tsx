@@ -2,8 +2,6 @@
 
 import HomeIcon from "@mui/icons-material/Home";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -12,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { LinkButton, LinkIconButton } from "@/components/LinkButton";
 import { Locale } from "@/config";
 
 export default function Header({ locale }: { locale: Locale }) {
@@ -58,16 +57,17 @@ export default function Header({ locale }: { locale: Locale }) {
         }}
       >
         {/* Left: Home Button */}
-        <IconButton color="inherit" sx={{ fontSize: "2rem" }} href="/">
+        <LinkIconButton color="inherit" sx={{ fontSize: "2rem" }} href="/">
           <HomeIcon fontSize="large" />
-        </IconButton>
+        </LinkIconButton>
 
         {/* Right: Report Problem Button and Language Switcher */}
         <Box sx={{ display: "flex", alignItems: "stretch" }}>
-          <Button
+          <LinkButton
             variant="outlined"
             size="small"
             href={urls("reportProblem")}
+            target="_blank"
             sx={{
               color: theme.palette.common.white,
               borderColor: theme.palette.common.white,
@@ -75,7 +75,7 @@ export default function Header({ locale }: { locale: Locale }) {
             }}
           >
             {links("reportProblem")}
-          </Button>
+          </LinkButton>
           <LanguageSwitcher locale={locale} />
         </Box>
       </Box>

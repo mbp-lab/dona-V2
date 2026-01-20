@@ -6,9 +6,12 @@ export const EXTERNAL_DONOR_ID_COOKIE = "externalDonorId";
 const FEEDBACK_ROUTE = "/donation-feedback";
 const DONATION_ROUTE = "/data-donation";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   // Redirect to the landing page if the user isn't authorized
-  if ((req.nextUrl.pathname == FEEDBACK_ROUTE && !req.cookies.get(DONATION_ID_COOKIE)) || (req.nextUrl.pathname == DONATION_ROUTE && !req.cookies.get(EXTERNAL_DONOR_ID_COOKIE))) {
+  if (
+    (req.nextUrl.pathname == FEEDBACK_ROUTE && !req.cookies.get(DONATION_ID_COOKIE)) ||
+    (req.nextUrl.pathname == DONATION_ROUTE && !req.cookies.get(EXTERNAL_DONOR_ID_COOKIE))
+  ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 

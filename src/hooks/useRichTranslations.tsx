@@ -23,13 +23,12 @@ export function useRichTranslations(namespace: string) {
     }
 
     const url = globalTranslate(urlKey);
-    const LinkComponent = (text: ReactNode) => (
+    // Return a render function that creates the element, not a component function
+    return (text: ReactNode) => (
       <a href={url} target={newTab ? "_blank" : "_self"} rel={newTab ? "noopener noreferrer" : undefined}>
         {text}
       </a>
     );
-    Object.defineProperty(LinkComponent, "name", { value: `Link(${urlKey})` });
-    return LinkComponent;
   };
 
   return (
@@ -40,13 +39,13 @@ export function useRichTranslations(namespace: string) {
           translate.rich(key, {
             ...makeLinkHandlers(urlKeys, newTab),
             br: () => <br />,
-            p: txt => <p>{txt}</p>,
-            u: txt => <u>{txt}</u>,
-            b: content => <b>{content}</b>,
-            i: content => <i>{content}</i>,
-            em: content => <em>{content}</em>,
-            strong: content => <strong>{content}</strong>,
-            email: address => <a href={"mailto:" + address}>{address}</a>,
+            p: (txt: ReactNode) => <p>{txt}</p>,
+            u: (txt: ReactNode) => <u>{txt}</u>,
+            b: (content: ReactNode) => <b>{content}</b>,
+            i: (content: ReactNode) => <i>{content}</i>,
+            em: (content: ReactNode) => <em>{content}</em>,
+            strong: (content: ReactNode) => <strong>{content}</strong>,
+            email: (address: ReactNode) => <a href={"mailto:" + address}>{address}</a>,
             ...templateValues
           }),
         link: linkHandler // Standalone function for direct use

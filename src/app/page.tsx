@@ -1,12 +1,12 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 import Image from "next/image";
 
+import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
@@ -77,7 +77,14 @@ export default function HomePage() {
                 {/* Image Box */}
                 <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent="center">
                   <Box sx={{ width: 260, mx: "auto", display: "flex", justifyContent: "center" }}>
-                    <Image src={landing.t(`donationInfo.${section}.image`)} alt={landing.t(`donationInfo.${section}.title`)} width={260} height={80} style={{ objectFit: "contain" }} loading="lazy" />
+                    <Image
+                      src={landing.t(`donationInfo.${section}.image`)}
+                      alt={landing.t(`donationInfo.${section}.title`)}
+                      width={260}
+                      height={80}
+                      style={{ objectFit: "contain" }}
+                      loading="lazy"
+                    />
                   </Box>
                 </Grid>
 
@@ -100,9 +107,9 @@ export default function HomePage() {
 
         {/* Start Button */}
         <Box>
-          <Button variant="contained" href="/instructions">
+          <LinkButton variant="contained" href="/instructions">
             {actions.t("start")}
-          </Button>
+          </LinkButton>
         </Box>
       </Stack>
     </Container>

@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import DonationDataSelector from "@components/DonationDataSelector";
 import { useDonation } from "@/context/DonationContext";
+import { LinkButton } from "@/components/LinkButton";
 
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import produceGraphData from "@/services/charts/produceGraphData";
@@ -222,9 +223,9 @@ export default function DataDonationPage() {
 
         <Box>
           <Stack spacing={2} direction="row" sx={{ justifyContent: "center" }}>
-            <Button variant="contained" href="/instructions">
+            <LinkButton variant="contained" href="/instructions">
               {actions("previous")}
-            </Button>
+            </LinkButton>
             <Button variant="contained" onClick={onDataDonationUpload} disabled={loading || !validated}>
               {actions("submit")}
             </Button>

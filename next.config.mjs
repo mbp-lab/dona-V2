@@ -52,10 +52,19 @@ const nextConfig = {
         'sql.js/dist/sql-wasm.js': 'sql.js'
       });
     }
-    // Allows loading svg from .svg file
+    // Allows loading svg from .svg file with SVGR
     config.module.rules.push({
       test: /\.svg$/,
-      use: ["@svgr/webpack"],
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            svgo: false,
+            titleProp: true,
+            ref: true,
+          },
+        },
+      ],
     });
     return config;
   },

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 import { db } from "@/db/drizzle";
 import { conversations as conversationsTbl, donations as donationsTbl, graphData } from "@/db/schema";
-import { DONATION_ID_COOKIE } from "@/middleware";
+import { DONATION_ID_COOKIE } from "@/proxy";
 import produceGraphData from "@/services/charts/produceGraphData";
 import { GraphData } from "@models/graphData";
 import { DonationStatus, Conversation } from "@models/processed";
