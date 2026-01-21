@@ -16,7 +16,7 @@ export default function DatasourceSpecificInstructions({ dataSource }: { dataSou
   const isIMessage = dataSource === DataSourceValue.IMessage;
   const isInstagram = dataSource === DataSourceValue.Instagram;
   const secondParagraph = isWhatsApp ? "selection" : "duration";
-  const stepsCount = dataSource === DataSourceValue.IMessage ? 6 : isWhatsApp ? 8 : isInstagram ? 18 : 19;
+  const stepsCount = dataSource === DataSourceValue.IMessage ? 6 : isWhatsApp ? 8 : isInstagram ? 19 : 20;
   const verticalVideo = isWhatsApp || dataSource === DataSourceValue.Instagram;
 
   const externalLinks = {
