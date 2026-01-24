@@ -7,6 +7,18 @@ import initSqlJs from "sql.js";
 import { Conversation } from "@models/processed";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 
+// Mock wa-sqlite since Jest doesn't handle ES modules well
+jest.mock("@journeyapps/wa-sqlite", () => ({
+  Factory: jest.fn(),
+  SQLITE_ROW: 100,
+  SQLITE_DONE: 101,
+  SQLITE_OK: 0
+}));
+
+jest.mock("@journeyapps/wa-sqlite/dist/wa-sqlite-async.mjs", () => ({
+  default: jest.fn()
+}));
+
 jest.mock("@services/parsing/shared/aliasConfig", () => ({
   getAliasConfig: () => ({
     systemAlias: "System",

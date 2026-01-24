@@ -1,11 +1,11 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import Image from "next/image";
 
+import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { MainTitle, RichText } from "@/styles/StyledTypography";
 
@@ -36,7 +36,14 @@ export default function LearnMore() {
                   mx: "auto"
                 }}
               >
-                <Image src={learnMore.t(`images.${imgKey}.imagePath`)} alt={learnMore.t(`images.${imgKey}.caption`)} width={0} height={0} style={{ width: "100%", height: "auto" }} loading="lazy" />
+                <Image
+                  src={learnMore.t(`images.${imgKey}.imagePath`)}
+                  alt={learnMore.t(`images.${imgKey}.caption`)}
+                  width={0}
+                  height={0}
+                  style={{ width: "100%", height: "auto" }}
+                  loading="lazy"
+                />
                 <figcaption>
                   <RichText sx={{ fontStyle: "italic" }}>{learnMore.t(`images.${imgKey}.caption`)}</RichText>
                 </figcaption>
@@ -56,14 +63,14 @@ export default function LearnMore() {
         <Box sx={{ mt: 4 }}>
           <Grid container spacing={2} justifyContent="center">
             <Grid size="auto">
-              <Button variant="contained" href="/">
+              <LinkButton variant="contained" href="/">
                 {actions.t("previous")}
-              </Button>
+              </LinkButton>
             </Grid>
             <Grid size="auto">
-              <Button variant="contained" href="/instructions">
+              <LinkButton variant="contained" href="/instructions">
                 {actions.t("start")}
-              </Button>
+              </LinkButton>
             </Grid>
           </Grid>
         </Box>

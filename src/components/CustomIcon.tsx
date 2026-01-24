@@ -1,28 +1,87 @@
-import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
+"use client";
 
-import FacebookLogo from "@images/logos/icons8-facebook.svg";
-import InstagramLogo from "@images/logos/icons8-instagram.svg";
-import IMessageLogo from "@images/logos/icons8-messages.svg";
-import WhatsAppLogo from "@images/logos/icons8-whatsapp.svg";
+import Box from "@mui/material/Box";
+import { SvgIconProps } from "@mui/material/SvgIcon";
+import Image from "next/image";
+import React from "react";
 
-export const WhatsAppIcon = (props: SvgIconProps) => (
-  <SvgIcon {...props} viewBox="0 0 48 48">
-    <WhatsAppLogo />
-  </SvgIcon>
-);
-export const InstagramIcon = (props: SvgIconProps) => (
-  <SvgIcon {...props} viewBox="0 0 48 48">
-    <InstagramLogo />
-  </SvgIcon>
-);
-export const FacebookIcon = (props: SvgIconProps) => (
-  <SvgIcon {...props} viewBox="0 0 48 48">
-    <FacebookLogo />
-  </SvgIcon>
-);
+// Use SVG files directly as image sources - Next.js 15+ recommended approach
+export const WhatsAppIcon = React.forwardRef<HTMLDivElement, SvgIconProps>((props, ref) => {
+  const { sx, fontSize = "1.5rem" } = props;
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: fontSize,
+        height: fontSize,
+        ...sx
+      }}
+    >
+      <Image src="/images/logos/icons8-whatsapp.svg" alt="" width={24} height={24} style={{ width: "100%", height: "100%" }} />
+    </Box>
+  );
+});
+WhatsAppIcon.displayName = "WhatsAppIcon";
 
-export const IMessageIcon = (props: SvgIconProps) => (
-  <SvgIcon {...props} viewBox="0 0 48 48">
-    <IMessageLogo />
-  </SvgIcon>
-);
+export const InstagramIcon = React.forwardRef<HTMLDivElement, SvgIconProps>((props, ref) => {
+  const { sx, fontSize = "1.5rem" } = props;
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: fontSize,
+        height: fontSize,
+        ...sx
+      }}
+    >
+      <Image src="/images/logos/icons8-instagram.svg" alt="" width={24} height={24} style={{ width: "100%", height: "100%" }} />
+    </Box>
+  );
+});
+InstagramIcon.displayName = "InstagramIcon";
+
+export const FacebookIcon = React.forwardRef<HTMLDivElement, SvgIconProps>((props, ref) => {
+  const { sx, fontSize = "1.5rem" } = props;
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: fontSize,
+        height: fontSize,
+        ...sx
+      }}
+    >
+      <Image src="/images/logos/icons8-facebook.svg" alt="" width={24} height={24} style={{ width: "100%", height: "100%" }} />
+    </Box>
+  );
+});
+FacebookIcon.displayName = "FacebookIcon";
+
+export const IMessageIcon = React.forwardRef<HTMLDivElement, SvgIconProps>((props, ref) => {
+  const { sx, fontSize = "1.5rem" } = props;
+  return (
+    <Box
+      ref={ref}
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: fontSize,
+        height: fontSize,
+        ...sx
+      }}
+    >
+      <Image src="/images/logos/icons8-messages.svg" alt="" width={24} height={24} style={{ width: "100%", height: "100%" }} />
+    </Box>
+  );
+});
+IMessageIcon.displayName = "IMessageIcon";

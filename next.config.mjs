@@ -28,18 +28,43 @@ const nextConfig = {
       allowedOrigins: [...devOrigins, "https://nyu.dona.tf.uni-bielefeld.de"],
     },
   },
-  webpack: (config) => {
+  // Tell Next.js to skip bundling sql.js - it will be loaded dynamically at runtime
+  transpilePackages: [],
+  webpack: (config, { isServer }) => {
     // Ignores fs module so that sql.js can be used in the browser
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      path: false,
-      crypto: false,
-    };
-    // Allows loading svg from .svg file
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+      };
+      // Also add alias to ensure fs is not bundled
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        fs: false,
+        path: false,
+      };
+      // Mark sql.js as external for client bundles - it will be loaded via CDN or dynamic import
+      config.externals = config.externals || [];
+      config.externals.push({
+        'sql.js': 'sql.js',
+        'sql.js/dist/sql-wasm.js': 'sql.js'
+      });
+    }
+    // Allows loading svg from .svg file with SVGR
     config.module.rules.push({
       test: /\.svg$/,
-      use: ["@svgr/webpack"],
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            svgo: false,
+            titleProp: true,
+            ref: true,
+          },
+        },
+      ],
     });
     return config;
   },
