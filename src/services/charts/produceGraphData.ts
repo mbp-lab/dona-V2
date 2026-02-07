@@ -48,6 +48,7 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                 const monthlySecondsPerConversation = monthlyCountsPerConversation(donorId, conversations, "seconds");
 
                 // aggregated conversations data
+                const dailySentHoursPerConversation = conversations.map(c => produceWordCountDailyHours(donorId, [c], true));
                 const dailyWords = aggregateDailyCounts(dailyWordsPerConversation);
                 const dailySeconds = aggregateDailyCounts(dailySecondsPerConversation);
 
@@ -123,7 +124,7 @@ export default function produceGraphData(donorId: string, allConversations: Conv
                     slidingWindowMeanDailySeconds,
                     dailyWordsPerConversation,
                     dailySentHours,
-                    dailySentHoursPerConversation: [],
+                    dailySentHoursPerConversation,
                     dailyReceivedHours,
                     answerTimes,
                     basicStatistics,
