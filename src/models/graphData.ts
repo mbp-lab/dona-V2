@@ -65,6 +65,44 @@ export interface BasicStatistics {
   emojisTotal?: SentReceived;
 }
 
+export interface ChatSummary {
+    chatName: string;
+    donorSentMessages: number;
+    donorSentWords: number;
+    quickReplyPercentage: number;
+    longestStreak: number;
+}
+
+export interface ActivityStats {
+    activeDays: number;
+    totalDays: number;
+    activityPercentage: number;
+}
+
+export interface PeakDayStats {
+    date: string;
+    activeHours: number;
+    totalMessagesExchanged: number;
+    topChat: string;
+}
+
+export interface GeneralInfoStats {
+    avgWordsPerSentMessage: number;
+    activityStats: ActivityStats;
+    peakDayStats: PeakDayStats;
+}
+
+export interface PodiumContact {
+    name: string;
+    messageCount: number;
+    rank: number; // 1, 2 or 3
+}
+export interface ReplyTimeRacer {
+    name: string;
+    avgReplyTimeMinutes: number;
+    formattedTime: string;
+}
+
 export interface GraphData {
   focusConversations: string[];
   monthlyWordsPerConversation: Record<string, SentReceivedPoint[]>;
@@ -82,4 +120,9 @@ export interface GraphData {
   audioLengthDistribution: AudioLengthDistribution;
   emojiDistribution?: EmojiDistribution;
   basicStatistics: BasicStatistics;
+  // New added carousels and charts
+  generalInfoStats: GeneralInfoStats;
+  chatSummaries: ChatSummary[];
+  topContactsPodium: PodiumContact[];
+  replyTimeRace: ReplyTimeRacer[];
 }
