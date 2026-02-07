@@ -421,6 +421,7 @@
     "yourId": "Your ID"
   },
   "feedback": {
+    "moreScientificPlots": "See more detailed plots here",
     "title": "Thank you for the donation of your social media data!",
     "loading": "Loading graph...",
     "genericError": "Something went wrong! Please go back to the start and repeat the process.",
@@ -581,6 +582,7 @@
         }
       },
       "wordCountSlidingWindowMean": {
+        "title": "Average Daily Word Count",
         "description": "Here you can see the average number of your sent and received words per day (more precisely, we calculate a so-called sliding window average with a window size of 30 days).",
         "legend": {
           "sent": "Sent words",
@@ -634,6 +636,7 @@
         }
       },
       "dayPartsMonthly": {
+        "title": "Day Parts per Month",
         "description": "Contrary to the graph above, in this graph you can see how the words you sent are distributed over different parts of the day <u>per month</u>.",
         "legend": {
           "sent": "Sent words",
