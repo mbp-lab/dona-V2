@@ -141,6 +141,19 @@
       "body": "If you have received your data using these instructions, you can now start with the declaration of consent and survey. Afterwards you can donate your data."
     }
   },
+  "testUpload": {
+    "title": "Test if it works",
+    "placeholder": "Use this quick check to make sure your files can be processed before you continue.",
+    "datasourceTitle_format": "Test {datasource} data",
+    "success": "Everything looks good. Please move forward.",
+    "errorHelp": "Something went wrong. You cannot participate with these data. Please help us understand the issue in this survey.",
+    "consentHint": "Please complete at least one successful test to continue.",
+    "copy": {
+      "button": "Copy error message",
+      "success": "Copied",
+      "fail": "Copy failed"
+    }
+  },
   "whatsapp": {
     "devices": {
       "body": "You need your smartphone, on which you use WhatsApp. Please make sure that you are storing the data on a device that no one but you has access to."

@@ -140,6 +140,19 @@
       "body": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, können Sie jetzt mit der Einverständniserklärung und dem  Fragebogen beginnen. Im Anschluss können Sie dann Ihre Daten spenden."
     }
   },
+  "testUpload": {
+    "title": "Testen, ob es funktioniert",
+    "placeholder": "Nutzen Sie diesen kurzen Check, um sicherzustellen, dass Ihre Dateien verarbeitet werden können, bevor Sie fortfahren.",
+    "datasourceTitle_format": "{datasource}-Daten testen",
+    "success": "Alles sieht gut aus. Bitte fahren Sie fort.",
+    "errorHelp": "Es ist etwas schiefgelaufen. Mit diesen Daten können Sie nicht teilnehmen. Bitte helfen Sie uns, das Problem in dieser Umfrage zu verstehen.",
+    "consentHint": "Bitte führen Sie mindestens einen erfolgreichen Test durch, um fortzufahren.",
+    "copy": {
+      "button": "Fehlermeldung kopieren",
+      "success": "Kopiert",
+      "fail": "Kopieren fehlgeschlagen"
+    }
+  },
   "whatsapp": {
     "devices": {
       "body": "Sie benötigen Ihr Smartphone, auf dem Sie WhatsApp nutzen. Bitte stellen Sie sicher, dass Sie die Daten auf einem Gerät speichern, auf das außer Ihnen niemand Zugriff hat."
