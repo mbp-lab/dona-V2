@@ -6,16 +6,16 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import styled from "@mui/material/styles/styled";
-import React, { ChangeEvent, useState } from "react";
 import { useTranslations } from "next-intl";
+import React, { ChangeEvent, useState } from "react";
 
+import { checkForDuplicateConversations } from "@/app/data-donation/actions";
 import { CONFIG } from "@/config";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { anonymizeData } from "@/services/anonymization";
 import { computeConversationHash, shouldHashConversation } from "@/services/conversationHash";
+import { DonationErrors, DonationValidationError, getErrorMessage } from "@/services/errors";
 import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@/services/validation";
-import { DonationValidationError, DonationErrors, getErrorMessage } from "@/services/errors";
-import { checkForDuplicateConversations } from "@/app/data-donation/actions";
 
 import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
 import { DataSourceValue } from "@models/processed";

@@ -8,8 +8,8 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 
 import ConsentModal from "@/components/ConsentModal";
 import { LinkButton } from "@/components/LinkButton";
