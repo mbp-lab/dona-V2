@@ -15,6 +15,7 @@ import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { anonymizeData } from "@/services/anonymization";
 import { computeConversationHash, shouldHashConversation } from "@/services/conversationHash";
 import { DonationErrors, DonationValidationError, getErrorMessage } from "@/services/errors";
+import { useAliasConfig } from "@/services/parsing/shared/aliasConfig";
 import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@/services/validation";
 
 import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
@@ -32,6 +33,7 @@ interface UploadTestSelectorProps {
 }
 
 const UploadTestSelector: React.FC<UploadTestSelectorProps> = ({ dataSourceValue, onValidationChange }) => {
+  useAliasConfig();
   const donation = useRichTranslations("donation");
   const testUpload = useRichTranslations("testUpload");
   const links = useTranslations("links");
