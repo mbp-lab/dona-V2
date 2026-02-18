@@ -1,16 +1,14 @@
-import { describe, expect, it, beforeEach } from "@jest/globals";
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import fs from "fs";
 import path from "path";
-import { DonationErrors } from "@services/errors";
 import { DataSourceValue } from "@models/processed";
+import { handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
+import deIdentify from "@services/parsing/meta/deIdentify";
 
 // Mock aliasConfig to avoid next-intl dependency
 jest.mock("@services/parsing/shared/aliasConfig", () => require("@services/__mocks__/aliasConfigMock"));
-// Mock deIdentify 
+// Mock deIdentify
 jest.mock("@services/parsing/meta/deIdentify", () => require("@services/parsing/__mocks__/metaDeIdentifyMock"));
-
-import { handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
-import deIdentify from "@services/parsing/meta/deIdentify";
 
 describe("Instagram Handler", () => {
   beforeEach(() => {
@@ -27,8 +25,17 @@ describe("Instagram Handler", () => {
 
   describe("Fixture tests with real Instagram export", () => {
     it("should parse valid Instagram export fixture", async () => {
-      const fixturePath = path.join(__dirname, "..", "..", "..", "..", "test_data", "instagram", "artificial_instagram_export_valid.zip");
-      
+      const fixturePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "..",
+        "test_data",
+        "instagram",
+        "artificial_instagram_export_valid.zip"
+      );
+
       if (!fs.existsSync(fixturePath)) {
         console.warn(`Fixture not found: ${fixturePath}`);
         return;
@@ -41,7 +48,7 @@ describe("Instagram Handler", () => {
 
       // Verify deIdentify was called
       expect(deIdentify).toHaveBeenCalledTimes(1);
-      
+
       const [parsedConversations, audioEntries, donorName, dataSource] = (deIdentify as jest.Mock).mock.calls[0];
 
       // Check that conversations were parsed
@@ -66,8 +73,17 @@ describe("Instagram Handler", () => {
     });
 
     it("should parse conversations with correct structure", async () => {
-      const fixturePath = path.join(__dirname, "..", "..", "..", "..", "test_data", "instagram", "artificial_instagram_export_valid.zip");
-      
+      const fixturePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "..",
+        "test_data",
+        "instagram",
+        "artificial_instagram_export_valid.zip"
+      );
+
       if (!fs.existsSync(fixturePath)) {
         console.warn(`Fixture not found: ${fixturePath}`);
         return;
@@ -82,7 +98,7 @@ describe("Instagram Handler", () => {
 
       // Verify conversation structure
       expect(parsedConversations.length).toBeGreaterThan(0);
-      
+
       const firstConversation = parsedConversations[0];
       expect(firstConversation).toHaveProperty("participants");
       expect(firstConversation).toHaveProperty("messages");
@@ -103,8 +119,17 @@ describe("Instagram Handler", () => {
     });
 
     it("should detect audio entries from fixture", async () => {
-      const fixturePath = path.join(__dirname, "..", "..", "..", "..", "test_data", "instagram", "artificial_instagram_export_valid.zip");
-      
+      const fixturePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "..",
+        "..",
+        "test_data",
+        "instagram",
+        "artificial_instagram_export_valid.zip"
+      );
+
       if (!fs.existsSync(fixturePath)) {
         console.warn(`Fixture not found: ${fixturePath}`);
         return;
@@ -127,9 +152,8 @@ describe("Instagram Handler", () => {
     it("should handle empty zip file", async () => {
       // Create minimal valid empty zip file
       const emptyZipBuffer = new Uint8Array([
-        0x50, 0x4b, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        0x50, 0x4b, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00
       ]);
       const emptyZip = new File([emptyZipBuffer], "empty.zip", { type: "application/zip" });
 
