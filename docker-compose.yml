@@ -18,6 +18,7 @@ services:
     build:
       context: .
       args:
+        - DEMO_MODE
         - DONOR_ID_INPUT_METHOD
         - DONOR_SURVEY_ENABLED
         - FEEDBACK_SURVEY_ENABLED
@@ -28,6 +29,7 @@ services:
     environment:
       - DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
       - NODE_ENV=production
+      - DEMO_MODE=$DEMO_MODE
       - DONOR_ID_INPUT_METHOD=$DONOR_ID_INPUT_METHOD
       - DONOR_SURVEY_ENABLED=$DONOR_SURVEY_ENABLED
       - FEEDBACK_SURVEY_ENABLED=$FEEDBACK_SURVEY_ENABLED

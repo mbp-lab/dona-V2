@@ -10,6 +10,8 @@ import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
 export default function HomePage() {
   const actions = useRichTranslations("actions");
   const landing = useRichTranslations("landing");
@@ -17,6 +19,15 @@ export default function HomePage() {
   return (
     <Container maxWidth="md" sx={{ flexGrow: 1 }}>
       <Stack spacing={2} alignItems="center" textAlign="center">
+        {isDemoMode && (
+          <Box sx={{ width: "100%", border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}>
+            <MainTitle variant="h6" sx={{ m: 0 }}>
+              {landing.t("demoMode.title")}
+            </MainTitle>
+            <RichText sx={{ mb: 0 }}>{landing.t("demoMode.body")}</RichText>
+          </Box>
+        )}
+
         {/* What Section */}
         <Box>
           <MainTitle variant="h5">{landing.t("what.title")}</MainTitle>
