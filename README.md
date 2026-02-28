@@ -2,8 +2,6 @@
 
 A Next.js platform for collecting and de-identifying social data to support research on mental wellbeing.
 
-The previous version of the application is available in the legacy repository: https://github.com/mbp-lab/dona
-
 ## Table of Contents
 
 - [Overview](#overview)
@@ -385,3 +383,8 @@ Relations and schema notes
 - Check for outdated packages: `pnpm outdated`
 - Investigate dependency usage: `pnpm why <package-name>`
 - Always run tests and the app after updates: `pnpm test`; `pnpm dev` or `pnpm start`
+
+## Credits
+
+- The first version of this application – featuring a hybrid stack of Scala and Javascript – was developed by the [MBP Lab at the University of Bielefeld](https://github.com/mbp-lab).
+- A full rewrite and subsequent iterations were implemented by [Jason Robert](https://github.com/jasonr2048) as contracted work.
