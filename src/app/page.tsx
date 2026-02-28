@@ -73,7 +73,14 @@ export default function HomePage() {
           <MainTitle variant="h5">{landing.t("donationInfo.title")}</MainTitle>
           <Grid container spacing={3} justifyContent="center">
             {["dataRequest", "anonymisation", "storage"].map(section => (
-              <Grid container key={section} spacing={3} size={{ xs: 12 }} flexDirection={{ xs: "column", md: "row" }} alignItems="center">
+              <Grid
+                container
+                key={section}
+                spacing={3}
+                size={{ xs: 12 }}
+                flexDirection={{ xs: "column", md: "row" }}
+                alignItems="center"
+              >
                 {/* Image Box */}
                 <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent="center">
                   <Box sx={{ width: 260, mx: "auto", display: "flex", justifyContent: "center" }}>

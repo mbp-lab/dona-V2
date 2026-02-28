@@ -1,7 +1,12 @@
 import { AnonymizationResult, DataSourceValue } from "@models/processed";
 import { DonationErrors, DonationValidationError } from "@services/errors";
 import { decode, processJsonContent } from "@services/parsing/shared/decoding";
-import { extractEntriesFromZips, getEntryText, isMatchingEntry, ValidEntry } from "@services/parsing/shared/zipExtraction";
+import {
+  extractEntriesFromZips,
+  getEntryText,
+  isMatchingEntry,
+  ValidEntry
+} from "@services/parsing/shared/zipExtraction";
 
 import deIdentify from "./deIdentify";
 
@@ -19,11 +24,21 @@ export interface ParsedConversation {
 }
 
 export async function handleInstagramZipFiles(fileList: File[]): Promise<AnonymizationResult> {
-  return handleMetaZipFiles(fileList, "personal_information.json", extractDonorNameFromInstagramProfile, DataSourceValue.Instagram);
+  return handleMetaZipFiles(
+    fileList,
+    "personal_information.json",
+    extractDonorNameFromInstagramProfile,
+    DataSourceValue.Instagram
+  );
 }
 
 export async function handleFacebookZipFiles(fileList: File[]): Promise<AnonymizationResult> {
-  return handleMetaZipFiles(fileList, "profile_information.json", extractDonorNameFromFacebookProfile, DataSourceValue.Facebook);
+  return handleMetaZipFiles(
+    fileList,
+    "profile_information.json",
+    extractDonorNameFromFacebookProfile,
+    DataSourceValue.Facebook
+  );
 }
 
 const extractDonorNameFromFacebookProfile = (profileText: string): string => {
@@ -56,7 +71,12 @@ const extractDonorNameFromInstagramProfile = (profileText: string): string => {
   throw DonationValidationError(DonationErrors.NoDonorNameFound);
 };
 
-async function handleMetaZipFiles(fileList: File[], profileInfoFilePattern: string, userNameExtractor: (profileText: string) => string, dataSourceValue: DataSourceValue): Promise<AnonymizationResult> {
+async function handleMetaZipFiles(
+  fileList: File[],
+  profileInfoFilePattern: string,
+  userNameExtractor: (profileText: string) => string,
+  dataSourceValue: DataSourceValue
+): Promise<AnonymizationResult> {
   const allEntries: ValidEntry[] = await extractEntriesFromZips(fileList);
 
   // Check for the presence of profile information
@@ -65,7 +85,9 @@ async function handleMetaZipFiles(fileList: File[], profileInfoFilePattern: stri
     throw DonationValidationError(DonationErrors.NoProfile);
   }
   // Filter for message entries
-  const messageEntries = allEntries.filter(entry => isMatchingEntry(entry, "message.json") || isMatchingEntry(entry, "message_1.json"));
+  const messageEntries = allEntries.filter(
+    entry => isMatchingEntry(entry, "message.json") || isMatchingEntry(entry, "message_1.json")
+  );
   if (messageEntries.length < 1) {
     throw DonationValidationError(DonationErrors.NoMessageEntries);
   }
