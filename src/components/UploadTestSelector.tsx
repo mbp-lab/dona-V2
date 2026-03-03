@@ -9,14 +9,12 @@ import styled from "@mui/material/styles/styled";
 import { useTranslations } from "next-intl";
 import React, { ChangeEvent, useState } from "react";
 
-import { checkForDuplicateConversations } from "@/app/data-donation/actions";
 import { CONFIG } from "@/config";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { anonymizeData } from "@/services/anonymization";
-import { computeConversationHash, shouldHashConversation } from "@/services/conversationHash";
-import { DonationErrors, DonationValidationError, getErrorMessage } from "@/services/errors";
+import { getErrorMessage } from "@/services/errors";
 import { useAliasConfig } from "@/services/parsing/shared/aliasConfig";
-import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@/services/validation";
+import { DonationRequirementChecks, getDonationRequirementChecks } from "@/services/validation";
 
 import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
 import { DataSourceValue } from "@models/processed";
@@ -46,9 +44,35 @@ const UploadTestSelector: React.FC<UploadTestSelectorProps> = ({ dataSourceValue
   const [fileInputKey, setFileInputKey] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [loadingStep, setLoadingStep] = useState<1 | 2>(1);
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [requirementChecks, setRequirementChecks] = useState<DonationRequirementChecks | null>(null);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+
+  const allRequirementsMet = requirementChecks ? Object.values(requirementChecks).every(Boolean) : false;
+  const hasRequirementFailures = requirementChecks ? Object.values(requirementChecks).some(status => !status) : false;
+
+  const getRequirementIcon = (status: boolean | undefined) => {
+    if (status === undefined) {
+      return "•";
+    }
+
+    return status ? "✅" : "❌";
+  };
+
+  const createErrorReportText = () => {
+    const requirementSummary = [
+      `minChats=${requirementChecks?.minChats ?? false}`,
+      `minImportantChats=${requirementChecks?.minImportantChats ?? false}`,
+      `minTimePeriod=${requirementChecks?.minTimePeriod ?? false}`
+    ].join(", ");
+
+    return [
+      `Data source: ${dataSourceValue}`,
+      `Selected files: ${selectedFiles.map(file => file.name).join(", ") || "none"}`,
+      `Requirements: ${requirementSummary}`,
+      `Error: ${error || "Requirement constraints not met"}`
+    ].join("\n");
+  };
 
   const updateValidity = (valid: boolean) => {
     setIsValid(valid);
@@ -58,6 +82,7 @@ const UploadTestSelector: React.FC<UploadTestSelectorProps> = ({ dataSourceValue
   const handleFileSelection = async (event: ChangeEvent<HTMLInputElement>) => {
     setError(null);
     setCopyStatus(null);
+    setRequirementChecks(null);
     updateValidity(false);
 
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -65,57 +90,35 @@ const UploadTestSelector: React.FC<UploadTestSelectorProps> = ({ dataSourceValue
     if (files.length === 0) return;
 
     setIsLoading(true);
-    setLoadingStep(1);
 
     try {
-      const result = await anonymizeData(dataSourceValue, files);
+      const result = await anonymizeData(dataSourceValue, files, { skipValidation: true });
+      const checks = getDonationRequirementChecks(result.anonymizedConversations);
+      setRequirementChecks(checks);
 
-      setLoadingStep(2);
-      const conversationsWithHashes = result.anonymizedConversations.map(convo => {
-        const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
-        return {
-          ...convo,
-          conversationHash: hash
-        };
-      });
-
-      const hashes = conversationsWithHashes.map(convo => convo.conversationHash).filter((hash): hash is string => hash !== null);
-      if (hashes.length > 0) {
-        const duplicateCheck = await checkForDuplicateConversations(hashes);
-        if (!duplicateCheck.success) {
-          throw duplicateCheck.error;
-        }
+      if (Object.values(checks).every(Boolean)) {
+        updateValidity(true);
       }
-
-      if (!validateMinChatsForDonation(conversationsWithHashes)) {
-        throw DonationValidationError(DonationErrors.TooFewChats);
-      }
-      if (!validateMinImportantChatsForDonation(conversationsWithHashes)) {
-        throw DonationValidationError(DonationErrors.TooFewContactsOrMessages);
-      }
-
-      updateValidity(true);
     } catch (err) {
       const errorMessage = getErrorMessage(donation.t, err as Error, CONFIG);
       setError(errorMessage);
     } finally {
       setIsLoading(false);
-      setLoadingStep(1);
     }
   };
 
   const handleClearFiles = () => {
     setError(null);
     setCopyStatus(null);
+    setRequirementChecks(null);
     updateValidity(false);
     setSelectedFiles([]);
     setFileInputKey(prevKey => prevKey + 1);
   };
 
   const handleCopyError = async () => {
-    if (!error) return;
     try {
-      await navigator.clipboard.writeText(error);
+      await navigator.clipboard.writeText(createErrorReportText());
       setCopyStatus(testUpload.t("copy.success"));
     } catch {
       setCopyStatus(testUpload.t("copy.fail"));
@@ -139,10 +142,34 @@ const UploadTestSelector: React.FC<UploadTestSelectorProps> = ({ dataSourceValue
 
       {isLoading && (
         <Alert severity="info" sx={{ mt: 2 }}>
-          {loadingStep === 1
-            ? donation.t("anonymisation.processingStep", { step: "1/2" })
-            : donation.t("anonymisation.checkingDuplicatesStep", { step: "2/2" })}
+          {donation.t("anonymisation.processing")}
         </Alert>
+      )}
+
+      {selectedFiles.length > 0 && (
+        <Stack spacing={1} sx={{ mt: 2 }}>
+          <Typography variant="subtitle2">{testUpload.t("requirements.title")}</Typography>
+          <Typography variant="body2">
+            {getRequirementIcon(requirementChecks?.minChats)}{" "}
+            {testUpload.t("requirements.minChats", {
+              MIN_CHATS_FOR_DONATION: CONFIG.MIN_CHATS_FOR_DONATION
+            })}
+          </Typography>
+          <Typography variant="body2">
+            {getRequirementIcon(requirementChecks?.minImportantChats)}{" "}
+            {testUpload.t("requirements.minImportantChats", {
+              MIN_CHATS_FOR_DONATION: CONFIG.MIN_CHATS_FOR_DONATION,
+              MIN_MESSAGES_PER_CHAT: CONFIG.MIN_MESSAGES_PER_CHAT,
+              MIN_CONTACTS_PER_CHAT: CONFIG.MIN_CONTACTS_PER_CHAT
+            })}
+          </Typography>
+          <Typography variant="body2">
+            {getRequirementIcon(requirementChecks?.minTimePeriod)}{" "}
+            {testUpload.t("requirements.minTimePeriod", {
+              MIN_DONATION_TIME_PERIOD_MONTHS: CONFIG.MIN_DONATION_TIME_PERIOD_MONTHS
+            })}
+          </Typography>
+        </Stack>
       )}
 
       {!error && !isLoading && isValid && (
@@ -151,20 +178,18 @@ const UploadTestSelector: React.FC<UploadTestSelectorProps> = ({ dataSourceValue
         </Alert>
       )}
 
-      {error && !isLoading && (
+      {!isLoading && (error || hasRequirementFailures) && (
         <Stack spacing={2} sx={{ mt: 2 }}>
-          <Typography variant="body2">{testUpload.t("errorHelp")}</Typography>
+          <Typography variant="body2">{testUpload.rich("errorHelp", { link: "reportProblem" })}</Typography>
           <Stack spacing={1} direction={{ xs: "column", sm: "row" }} sx={{ alignItems: "flex-start" }}>
-            <Button variant="outlined" onClick={handleCopyError} disabled={!error}>
+            <Button variant="outlined" onClick={handleCopyError}>
               {testUpload.t("copy.button")}
-            </Button>
-            <Button variant="text" disabled={!copyStatus} sx={{ pointerEvents: "none" }}>
-              {copyStatus || "\u00A0"}
             </Button>
             <Button variant="contained" component="a" href={urls("reportProblem")} target="_blank" rel="noopener noreferrer">
               {links("reportProblem")}
             </Button>
           </Stack>
+          {copyStatus && <Typography variant="caption">{copyStatus}</Typography>}
         </Stack>
       )}
     </Box>
