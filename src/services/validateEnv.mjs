@@ -16,6 +16,10 @@ export const validateEnv = () => {
     // Convert non-string values to strings for Next.js compatibility
     return Object.fromEntries(Object.entries(parsedEnv).map(([key, value]) => [key, String(value)]));
   } catch (err) {
-    throw new Error(err instanceof z.ZodError ? `Environment validation failed: ${err.errors.map(e => e.message).join(", ")}` : `Unexpected error during environment validation: ${String(err)}`);
+    throw new Error(
+      err instanceof z.ZodError
+        ? `Environment validation failed: ${err.errors.map(e => e.message).join(", ")}`
+        : `Unexpected error during environment validation: ${String(err)}`
+    );
   }
 };

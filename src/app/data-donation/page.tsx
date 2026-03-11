@@ -46,7 +46,9 @@ export default function DataDonationPage() {
   const [allDonatedConversationsBySource, setAllDonatedConversationsBySource] = useState<ConversationsBySource>(
     {} as ConversationsBySource
   );
-  const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>({} as SelectedChatsBySource);
+  const [feedbackChatsBySource, setFeedbackChatsBySource] = useState<SelectedChatsBySource>(
+    {} as SelectedChatsBySource
+  );
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -214,7 +216,12 @@ export default function DataDonationPage() {
           </Box>
         )}
         <Box sx={{ my: 4, minWidth: "80%", textAlign: "left" }}>
-          {[DataSourceValue.WhatsApp, DataSourceValue.Facebook, DataSourceValue.Instagram, DataSourceValue.IMessage].map(source => (
+          {[
+            DataSourceValue.WhatsApp,
+            DataSourceValue.Facebook,
+            DataSourceValue.Instagram,
+            DataSourceValue.IMessage
+          ].map(source => (
             <Accordion key={source} sx={{ my: 1 }}>
               <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                 {source === DataSourceValue.WhatsApp && <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />}
@@ -230,7 +237,9 @@ export default function DataDonationPage() {
               <AccordionDetails>
                 <DonationDataSelector
                   dataSourceValue={source}
-                  onDonatedConversationsChange={newConversations => handleDonatedConversationsChange(source, newConversations)}
+                  onDonatedConversationsChange={newConversations =>
+                    handleDonatedConversationsChange(source, newConversations)
+                  }
                   onFeedbackChatsChange={newFeedbackChats => handleFeedbackChatsChange(source, newFeedbackChats)}
                 />
               </AccordionDetails>
