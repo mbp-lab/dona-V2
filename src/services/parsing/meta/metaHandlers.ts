@@ -54,8 +54,9 @@ const extractDonorNameFromFacebookProfile = (profileText: string): string => {
 
 const extractDonorNameFromInstagramProfile = (profileText: string): string => {
   interface ProfileUser {
-    string_map_data: {
-      Name: { value: string };
+    string_map_data?: {
+      Name?: { value?: string };
+      Username?: { value?: string };
     };
   }
 
@@ -63,9 +64,15 @@ const extractDonorNameFromInstagramProfile = (profileText: string): string => {
     profile_user: ProfileUser[];
   }
 
-  const profileJson: ProfileInfo = JSON.parse(profileText);
+  let profileJson: ProfileInfo;
+  try {
+    profileJson = JSON.parse(profileText);
+  } catch {
+    throw DonationValidationError(DonationErrors.NoDonorNameFound);
+  }
 
-  const name = profileJson?.profile_user?.[0]?.string_map_data?.Name?.value;
+  const stringMap = profileJson?.profile_user?.[0]?.string_map_data;
+  const name = stringMap?.Name?.value ?? stringMap?.Username?.value;
   if (name) return decode(name);
 
   throw DonationValidationError(DonationErrors.NoDonorNameFound);
@@ -105,6 +112,10 @@ async function handleMetaZipFiles(
     // Process the extracted data
     return deIdentify(parsedConversations, audioEntries, donorName, dataSourceValue);
   } catch (error) {
+    // Keep actionable validation reasons for the UI instead of collapsing to UnknownError.
+    if (error && typeof error === "object" && "reason" in error) {
+      throw error;
+    }
     throw DonationValidationError(DonationErrors.UnknownError);
   }
 }
