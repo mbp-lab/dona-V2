@@ -283,7 +283,11 @@
       "title": "Verwendung der anonymisierten Daten",
       "body": "Die Ergebnisse und Daten dieser Studie werden als wissenschaftliche Publikation veröffentlicht. Dies geschieht in anonymisierter Form, d. h. ohne dass die Daten einer spezifischen Person zugeordnet werden können. Die vollständig anonymisierten Daten dieser Studie werden online in einem Forschungsdaten-Repositorium gespeichert und qualifizierten Wissenschaftlern auf Antrag zugänglich gemacht."
     },
-    "confirmation": "Hiermit versichere ich, dass ich die oben beschriebenen Teilnehmerinformationen verstanden habe und mit den genannten Teilnahmebedingungen einverstanden bin."
+    "confirmation": "Hiermit versichere ich, dass ich die oben beschriebenen Teilnehmerinformationen verstanden habe und mit den genannten Teilnahmebedingungen einverstanden bin.",
+    "demoMode": {
+      "title": "Demo-Version",
+      "body": "Dies ist eine Demo-Version. Es werden keine Daten an uns übermittelt und es besteht kein Anspruch auf Vergütung."
+    }
   },
   "donation": {
     "datasourceTitle_format": "{datasource} Datenspende",
@@ -362,6 +366,11 @@
       "UnknownError": "Es gibt einen Fehler. Bitte überprüfen Sie Ihre Datenspende.",
       "TooShortTimePeriod_format": "Ihre Daten müssen einen Zeitraum von mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monaten umfassen.",
       "noAlias": "Ein Nutzername muss angegeben werden. Sie können ihn in Ihrem WhatsApp-Profil finden."
+    },
+    "demoMode": {
+      "title": "Demo-Version",
+      "body": "Dies ist eine Demo-Version. Ihre Daten bleiben im Browser und werden nicht an uns übermittelt. Es besteht kein Anspruch auf Vergütung.",
+      "submitLabel": "Demo-Feedback anzeigen"
     }
   },
   "dataProtection": {
@@ -673,6 +682,17 @@
       }
     },
     "thanks": "Wir hoffen Sie hatten spannende Erkenntnisse. Danke sehr!",
+    "demoMode": {
+      "title": "Demo-Version",
+      "body": "Dies ist eine Demo-Version. Es wurden keine Daten an uns übermittelt und es besteht kein Anspruch auf Vergütung."
+    },
+    "sampleData": {
+      "title": "Mit Beispieldaten testen",
+      "body": "Laden Sie Beispielexporte herunter und verwenden Sie diese in dieser Demo-Instanz.",
+      "whatsapp": "WhatsApp-Beispiel herunterladen",
+      "instagram": "Instagram-Beispiel herunterladen",
+      "imessage": "iMessage-Beispiel herunterladen"
+    },
     "buttons": {
       "nextButton": "Weiter",
       "finishButton": "Ende",
