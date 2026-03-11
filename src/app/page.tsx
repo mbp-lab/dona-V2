@@ -11,7 +11,6 @@ import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
 export default function HomePage() {
-  const actions = useRichTranslations("actions");
   const landing = useRichTranslations("landing");
 
   return (
@@ -112,11 +111,30 @@ export default function HomePage() {
           <RichText sx={{ fontStyle: "italic" }}>{landing.rich("contact.body")}</RichText>
         </Box>
 
-        {/* Start Button */}
-        <Box>
-          <LinkButton variant="contained" href="/instructions">
-            {actions.t("start")}
-          </LinkButton>
+        {/* Enrollment Section */}
+        <Box
+          sx={{
+            width: "100%",
+            border: "2px solid",
+            borderColor: "warning.main",
+            borderRadius: 2,
+            p: 3,
+            bgcolor: "warning.light"
+          }}
+        >
+          <RichText sx={{ fontWeight: 700, mb: 2 }}>{landing.t("enrollment.body")}</RichText>
+          <Stack
+            spacing={2}
+            direction={{ xs: "column", sm: "row" }}
+            sx={{ justifyContent: "center", alignItems: "center" }}
+          >
+            <LinkButton variant="outlined" href={landing.t("enrollment.signupUrl")} target="_blank">
+              {landing.t("enrollment.signUpButton")}
+            </LinkButton>
+            <LinkButton variant="contained" href="/instructions">
+              {landing.t("enrollment.hasTokenButton")}
+            </LinkButton>
+          </Stack>
         </Box>
       </Stack>
     </Container>
