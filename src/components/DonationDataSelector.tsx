@@ -40,7 +40,11 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
 }) => {
   const donation = useRichTranslations("donation");
   const acceptedFileTypes =
-    dataSourceValue == DataSourceValue.WhatsApp ? ".txt, .zip" : dataSourceValue == DataSourceValue.IMessage ? ".db" : ".zip";
+    dataSourceValue == DataSourceValue.WhatsApp
+      ? ".txt, .zip"
+      : dataSourceValue == DataSourceValue.IMessage
+        ? ".db"
+        : ".zip";
 
   // States
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -78,7 +82,9 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
         };
       });
 
-      const hashes = conversationsWithHashes.map(convo => convo.conversationHash).filter((hash): hash is string => hash !== null);
+      const hashes = conversationsWithHashes
+        .map(convo => convo.conversationHash)
+        .filter((hash): hash is string => hash !== null);
       if (hashes.length > 0) {
         const duplicateCheck = await checkForDuplicateConversations(hashes);
         if (!duplicateCheck.success) {
