@@ -320,7 +320,7 @@
     "previewData": {
       "title": "Preview of your anonymized data",
       "button": "Click here for a preview of your anonymized data",
-      "body1": "No private information has left your device. Only the meta-information has been extracted.",
+      "body1": "Only the meta-information has been extracted.",
       "body2": "As you can see, all the usernames have been anonymized and the message content has been replaced by the word count.",
       "message": "Message",
       "sender": "Sender of message",
@@ -383,7 +383,7 @@
     "title": "Data Protection Notice",
     "technicalDetails": {
       "title": "Anonymous usage of website",
-      "body1": "During the access and use of the website, no private information will be saved. If you access our website, your browser will transmit your IP address to our server in order to establish communication via the Internet. Your IP address will be saved but modified in order to eliminate any chance of identification.",
+      "body1": "If you access our website, your browser will transmit your IP address to our server in order to establish communication via the Internet. Your IP address will be saved but modified in order to eliminate any chance of identification.",
       "body2": "When calling up our website the following technical data will be transmitted: Name of accessed file; date and time of visit; transmitted data volume; notification whether the transfer was successful; web address, from which the data was accessed (Referrer URL); operating system as well as browser type (User Agent string); IP address (will only be saved in modified form).",
       "body3": "At the end of your session, i.e. after leaving our webs§ite or upon closing your browser, this information is automatically deleted and will not be saved (e.g. in log files).",
       "body4": "This website uses cookies in order to allow technical functionality and a smooth user experience. Cookies are small text files with information about the use of specific services, such as ours, which are stored on your device locally if you give permission through your browser settings. Cookies cannot execute programs or transmit viruses. This website is only using session cookies, which save information during the ongoing session but are deleted once the session finishes. No identification of your person is possible through these cookies."
@@ -414,7 +414,7 @@
     },
     "responsibleCentralWebsite": {
       "title": "Responsibility for Content of the Central Websites",
-      "body": "<p>Referat für Kommunikation<br></br>Ingo Lohuis<br></br><email>ingo.lohuis@uni-bielefeld.de</email></p><p>Responsibility for the content of all other Internet pages (e.g. the faculties, institutes, seminars or administrative offices) lies with the facility or author who produced or published the pages. If you have any questions about these webpages, please contact the individuals or facility/office named on the Internet page.</p><p>There are also various decentralized services on their own servers that do not belong to the domain \"www.uni-bielefeld.de\". These are all the responsibility of their specific operators.</p><p>URLs beginning with \"http://wwwhomes.uni-bielefeld.de\" lead to private or personal web pages of members of Bielefeld University. The University has no influence on their contents, and these in no way represent any official publication of Bielefeld University.</p>"
+      "body": "<p>Referat für Kommunikation<br></br>Ingo Lohuis<br></br><email>ingo.lohuis@uni-bielefeld.de</email></p><p>Responsibility for the content of all other Internet pages (e.g. the faculties, institutes, seminars or administrative offices) lies with the facility or author who produced or published the pages. If you have any questions about these webpages, please contact the individuals or facility/office named on the Internet page.</p><p>There are also various decentralized services on their own servers that do not belong to the domain \"www.uni-bielefeld.de\". These are all the responsibility of their specific operators.</p><p>URLs beginning with \"http://www.homes.uni-bielefeld.de\" lead to private or personal web pages of members of Bielefeld University. The University has no influence on their contents, and these in no way represent any official publication of Bielefeld University.</p>"
     },
     "liabilityDisclaimer": {
       "title": "Liability Disclaimer",
