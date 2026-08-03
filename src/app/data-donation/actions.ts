@@ -198,7 +198,7 @@ export async function appendConversationBatch(
 
       console.log(
         `[DONATION][donorId=${donorId}][donationId=${donationId}] ` +
-          `Sub-batch ${subIndex}/${totalSubBatches}: ${convoCount} conversations, ${textCount} messages, ${audioCount} audio messages`
+        `Sub-batch ${subIndex}/${totalSubBatches}: ${convoCount} conversations, ${textCount} messages, ${audioCount} audio messages`
       );
     }
 
@@ -274,7 +274,8 @@ export async function checkForDuplicateConversations(
       }
     });
 
-    const hasDuplicates = existingConversations.length > 0;
+    // const hasDuplicates = existingConversations.length > 0;
+    const hasDuplicates = false;
 
     if (hasDuplicates) {
       console.log(`[DONATION] ❌ checkForDuplicateConversations: found ${existingConversations.length} duplicate(s)`);
