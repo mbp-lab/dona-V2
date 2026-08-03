@@ -94,7 +94,7 @@ export default function ConsentModal() {
 
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen}>
+      <Button variant="contained" onClick={() => setDialogOpen(true)}>
         {actions.t("donate")}
       </Button>
       {/*      <FullSizeModal open={open} onClose={handleClose} onAgree={idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true)} ariaLabel="Consent Modal">
