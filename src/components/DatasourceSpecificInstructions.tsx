@@ -51,23 +51,38 @@ export default function DatasourceSpecificInstructions({ dataSource }: { dataSou
 
   return (
     <Grid container spacing={2} mt={-2} justifyContent="center" alignItems="flex-start">
-      {verticalVideo ? (
-        <Grid container spacing={2} alignItems="flex-start">
-          <FirstBlock halfWidth />
-          <Grid size={{ xs: 12, md: 6 }}>{isWhatsApp ? <TabbedInstructionVideo iosVideoUrl={source.t("video.ios")} androidVideoUrl={source.t("video.android")} iosCaption={source.t("video.iosCaption")} androidCaption={source.t("video.androidCaption")} /> : <InstructionVideo videoUrl={source.t("video")} />}</Grid>
-        </Grid>
+      {isIMessage ? (
+        <FirstBlock />
       ) : (
         <>
-          <FirstBlock />
-          <InstructionVideo videoUrl={source.t("video")} />
+          {verticalVideo ? (
+            <Grid container spacing={2} alignItems="flex-start">
+              <FirstBlock halfWidth />
+              <Grid size={{ xs: 12, md: 6 }}>
+                {isWhatsApp ? (
+                  <TabbedInstructionVideo
+                    iosVideoUrl={source.t("video.ios")}
+                    androidVideoUrl={source.t("video.android")}
+                    iosCaption={source.t("video.iosCaption")}
+                    androidCaption={source.t("video.androidCaption")}
+                  />
+                ) : (
+                  <InstructionVideo videoUrl={source.t("video")} />
+                )}
+              </Grid>
+            </Grid>
+          ) : (
+            <>
+              <FirstBlock />
+              <InstructionVideo videoUrl={source.t("video")} />
+            </>
+          )}
+          <StepsList title={generic.t("headers.overview")} translation={source} count={stepsCount} />
+          <Grid size={{ xs: 12, md: 10 }}>
+            <Typography>{source.rich("externalDocumentation", externalLinks)}</Typography>
+          </Grid>
         </>
       )}
-
-      <StepsList title={generic.t("headers.overview")} translation={source} count={stepsCount} />
-
-      <Grid size={{ xs: 12, md: 10 }}>
-        <Typography>{source.rich("externalDocumentation", externalLinks)}</Typography>
-      </Grid>
     </Grid>
   );
 }
