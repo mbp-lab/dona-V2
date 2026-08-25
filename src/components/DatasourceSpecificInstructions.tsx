@@ -27,21 +27,25 @@ export default function DatasourceSpecificInstructions({ dataSource }: { dataSou
 
   const FirstBlock = ({ halfWidth = false }: { halfWidth?: boolean }) => (
     <Grid size={{ xs: 12, md: halfWidth ? 6 : 10 }}>
-      <BlockTitle>{generic.t("headers.devices")}</BlockTitle>
-      <Typography>{source.rich("devices.body")}</Typography>
-
-      <BlockTitle>{source.t(`${secondParagraph}.title`)}</BlockTitle>
-      <Typography>{source.rich(`${secondParagraph}.body`)}</Typography>
-
-      <BlockTitle>{generic.t("headers.dataDeletion")}</BlockTitle>
-      <Typography>
-        {source.rich("dataDeletion.body", {
-          link: "secureDelete",
-          link_datenschutz: "datenschutz",
-          link_android: "deleteFromAndroid",
-          link_ios: "deleteFromIos"
-        })}
-      </Typography>
+      {isIMessage ? (
+        <Typography>{source.rich("nyu")}</Typography>
+      ) : (
+        <>
+          <BlockTitle>{generic.t("headers.devices")}</BlockTitle>
+          <Typography>{source.rich("devices.body")}</Typography>
+          <BlockTitle>{source.t(`${secondParagraph}.title`)}</BlockTitle>
+          <Typography>{source.rich(`${secondParagraph}.body`)}</Typography>
+          <BlockTitle>{generic.t("headers.dataDeletion")}</BlockTitle>
+          <Typography>
+            {source.rich("dataDeletion.body", {
+              link: "secureDelete",
+              link_datenschutz: "datenschutz",
+              link_android: "deleteFromAndroid",
+              link_ios: "deleteFromIos"
+            })}
+          </Typography>
+        </>
+      )}
     </Grid>
   );
 

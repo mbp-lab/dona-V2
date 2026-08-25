@@ -247,7 +247,7 @@
     "logo": "i-logo.svg"
   },
   "imessage": {
-    "devices": {
+    "nyu": "For obtaining your iMessage data, please reach out to your Research Coordinator for assistance. Thank you!""devices": {
       "body": "Click ‘yes, participate now’ to upload the iMessage file you extracted together with the NYU team. Please contact an NYU team member if you experience any issues."
     },
     "duration": {
