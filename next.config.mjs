@@ -1,13 +1,18 @@
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
 import createNextIntlPlugin from "next-intl/plugin";
 import { validateEnv } from "./src/services/validateEnv.mjs";
 
 const env = validateEnv();
-const devOrigins = process.env.NEXT_ALLOWED_DEV_ORIGINS ? process.env.NEXT_ALLOWED_DEV_ORIGINS.split(",") : [
-  "127.0.0.1",
-  "127.0.0.1:3000",
-  "127.0.0.1:9012",
-  "localhost:3000"
-];
+const parseOriginList = value =>
+  value
+    .split(",")
+    .map(origin => origin.trim())
+    .filter(Boolean);
+const devOrigins = process.env.DEV_ALLOWED_ORIGINS
+  ? parseOriginList(process.env.DEV_ALLOWED_ORIGINS)
+  : ["127.0.0.1", "127.0.0.1:3000", "127.0.0.1:9012", "localhost:3000"];
+// Next.js compares these with the host of the request origin, so they are host[:port] without a scheme
+const serverActionOrigins = parseOriginList(process.env.SERVER_ACTIONS_ALLOWED_ORIGINS ?? "");
 const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
@@ -19,7 +24,7 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "500mb",
-      allowedOrigins: [...devOrigins, "https://nyu.dona.tf.uni-bielefeld.de"]
+      allowedOrigins: serverActionOrigins
     }
   },
   // Tell Next.js to skip bundling sql.js - it will be loaded dynamically at runtime
@@ -64,4 +69,10 @@ const nextConfig = {
   }
 };
 
-export default withNextIntl(nextConfig);
+export default phase => {
+  // The dev origins may also call server actions, but only on the dev server
+  if (phase === PHASE_DEVELOPMENT_SERVER) {
+    nextConfig.experimental.serverActions.allowedOrigins = [...devOrigins, ...serverActionOrigins];
+  }
+  return withNextIntl(nextConfig);
+};
