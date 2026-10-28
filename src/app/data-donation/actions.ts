@@ -27,9 +27,7 @@ import { DonationErrors, DonationProcessingError, SerializedDonationError } from
 const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
 const BULK_CHUNK = 2000; // chunk size for large bulk inserts
 const isDemoMode = process.env.DEMO_MODE === "true";
-const isDuplicateCheckEnabled =
-  process.env.DUPLICATE_DONATION_CHECK_ENABLED !== "false" &&
-  process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED !== "false";
+const isDuplicateCheckEnabled = process.env.DUPLICATE_DONATION_CHECK_ENABLED !== "false";
 
 let cachedExceptionHashes: Set<string> | null = null;
 

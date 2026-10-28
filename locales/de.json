@@ -148,7 +148,10 @@
     },
     "continue": {
       "buttonsHeader": "Haben Sie Ihre Daten bereit?",
-      "body": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, gehen Sie zuerst zur kurzen Testseite. Wenn der Test funktioniert, können Sie mit der Einverständniserklärung und dem Fragebogen beginnen und danach Ihre Daten spenden."
+      "intro": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, können Sie jetzt fortfahren.",
+      "uploadTest": "Prüfen Sie zuerst auf der kurzen Testseite, ob Ihre Dateien verarbeitet werden können.",
+      "consent": "Anschließend folgen die Einverständniserklärung und der Fragebogen.",
+      "donate": "Im Anschluss können Sie dann Ihre Daten spenden."
     }
   },
   "testUpload": {

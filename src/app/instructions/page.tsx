@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTranslations } from "next-intl";
 
+import ConsentModal from "@/components/ConsentModal";
 import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { ENABLED_DATA_SOURCES } from "@/config";
@@ -20,6 +21,7 @@ import { DataSourceValue } from "@models/processed";
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const isUploadTestEnabled = process.env.NEXT_PUBLIC_UPLOAD_TEST_ENABLED !== "false";
+const isConsentEnabled = process.env.NEXT_PUBLIC_CONSENT_ENABLED !== "false";
 
 const sampleDataFiles = [
   {
@@ -121,7 +123,16 @@ export default function Instructions() {
           ))}
         </Box>
         <Box>
-          <Typography variant="body1">{instructions.t("continue.body")}</Typography>
+          <Typography variant="body1">
+            {[
+              instructions.t("continue.intro"),
+              isUploadTestEnabled && instructions.t("continue.uploadTest"),
+              isConsentEnabled && instructions.t("continue.consent"),
+              instructions.t("continue.donate")
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          </Typography>
           <Typography variant="h5" sx={{ margin: 3 }}>
             {instructions.t("continue.buttonsHeader")}
           </Typography>
@@ -129,9 +140,13 @@ export default function Instructions() {
             <LinkButton variant="contained" href="/">
               {a("previous")}
             </LinkButton>
-            <LinkButton variant="contained" href={isUploadTestEnabled ? "/upload-test" : "/data-donation"}>
-              {a("next")}
-            </LinkButton>
+            {isUploadTestEnabled ? (
+              <LinkButton variant="contained" href="/upload-test">
+                {a("next")}
+              </LinkButton>
+            ) : (
+              <ConsentModal />
+            )}
           </Stack>
         </Box>
       </Stack>

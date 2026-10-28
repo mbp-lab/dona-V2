@@ -149,7 +149,10 @@
     },
     "continue": {
       "buttonsHeader": "Do you have your data ready?",
-      "body": "If you have received your data using these instructions, continue to the quick test page first. If the test works, you can proceed to the declaration of consent and survey, and then donate your data."
+      "intro": "If you have received your data using these instructions, you can now continue.",
+      "uploadTest": "First, use the quick test page to check that your files can be processed.",
+      "consent": "Next, you will be asked for your declaration of consent and to fill in the survey.",
+      "donate": "Afterwards you can donate your data."
     }
   },
   "testUpload": {

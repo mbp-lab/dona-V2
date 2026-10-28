@@ -6,8 +6,7 @@ import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globa
 import { createMockDbClient } from "@/app/__tests__/mockDbClient";
 
 describe("donation actions - duplicate check config", () => {
-  const originalServerToggle = process.env.DUPLICATE_DONATION_CHECK_ENABLED;
-  const originalPublicToggle = process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED;
+  const originalToggle = process.env.DUPLICATE_DONATION_CHECK_ENABLED;
   const originalCsvPath = process.env.DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH;
 
   beforeEach(() => {
@@ -15,15 +14,13 @@ describe("donation actions - duplicate check config", () => {
   });
 
   afterEach(() => {
-    process.env.DUPLICATE_DONATION_CHECK_ENABLED = originalServerToggle;
-    process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED = originalPublicToggle;
+    process.env.DUPLICATE_DONATION_CHECK_ENABLED = originalToggle;
     process.env.DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH = originalCsvPath;
     jest.resetModules();
   });
 
   test("checkForDuplicateConversations can be disabled via config", async () => {
     process.env.DUPLICATE_DONATION_CHECK_ENABLED = "false";
-    process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED = "false";
 
     const { checkForDuplicateConversations } = await import("@/app/data-donation/actions");
     const throwingClient = createMockDbClient({
@@ -44,7 +41,6 @@ describe("donation actions - duplicate check config", () => {
 
   test("checkForDuplicateConversations ignores hashes configured as exceptions", async () => {
     process.env.DUPLICATE_DONATION_CHECK_ENABLED = "true";
-    process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED = "true";
 
     const hash = "a".repeat(64);
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "dona-duplicate-check-"));

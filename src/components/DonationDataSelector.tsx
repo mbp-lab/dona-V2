@@ -25,6 +25,7 @@ import { validateMinChatsForDonation, validateMinImportantChatsForDonation } fro
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const duplicateCheckEnabled = !isDemoMode && CONFIG.DUPLICATE_DONATION_CHECK_ENABLED;
+const duplicateCheckCsvDownloadEnabled = CONFIG.DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED;
 
 const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...props} />)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -85,19 +86,21 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       // Step 1: Anonymize data
       const result = await anonymizeData(dataSourceValue, files);
 
-      let conversationsWithHashes = result.anonymizedConversations;
+      // Hashes are always computed and stored, so that donations made while the duplicate check is
+      // disabled can still be detected once it is enabled again.
+      const conversationsWithHashes = result.anonymizedConversations.map(convo => {
+        const hash = shouldHashConversation(convo, CONFIG.MIN_MESSAGES_FOR_DUPLICATE_CHECK)
+          ? computeConversationHash(convo)
+          : null;
+        return {
+          ...convo,
+          conversationHash: hash
+        };
+      });
 
       if (duplicateCheckEnabled) {
-        // Step 2: Compute hashes and check for duplicates with server
+        // Step 2: Check for duplicates with server
         setLoadingStep(2);
-        conversationsWithHashes = result.anonymizedConversations.map(convo => {
-          const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
-          return {
-            ...convo,
-            conversationHash: hash
-          };
-        });
-
         const hashes = conversationsWithHashes
           .map(convo => convo.conversationHash)
           .filter((hash): hash is string => hash !== null);
@@ -220,9 +223,11 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       {/* Display anonymized data */}
       {!error && !isLoading && anonymizationResult && filteredConversations && (
         <Box sx={{ my: 3 }}>
-          <Button variant="outlined" sx={{ mb: 2 }} onClick={handleDownloadDuplicateCheckCsv}>
-            Download Duplicate-Check CSV
-          </Button>
+          {duplicateCheckCsvDownloadEnabled && (
+            <Button variant="outlined" sx={{ mb: 2 }} onClick={handleDownloadDuplicateCheckCsv}>
+              Download Duplicate-Check CSV
+            </Button>
+          )}
           {dataSourceValue !== DataSourceValue.Facebook && dataSourceValue !== DataSourceValue.Instagram && (
             <>
               <DateRangePicker calculatedRange={calculatedRange} setSelectedRange={handleDateRangeChange} />

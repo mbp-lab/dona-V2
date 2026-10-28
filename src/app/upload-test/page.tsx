@@ -31,17 +31,17 @@ export default function UploadTestPage() {
     {} as Record<DataSourceValue, boolean>
   );
 
+  const hasValidSource = useMemo(() => Object.values(validBySource).some(Boolean), [validBySource]);
+
   useEffect(() => {
     if (!isUploadTestEnabled) {
-      router.replace("/data-donation");
+      router.replace("/instructions");
     }
   }, [isUploadTestEnabled, router]);
 
   if (!isUploadTestEnabled) {
     return null;
   }
-
-  const hasValidSource = useMemo(() => Object.values(validBySource).some(Boolean), [validBySource]);
 
   const handleValidationChange = (source: DataSourceValue, isValid: boolean) => {
     setValidBySource(prev => ({
