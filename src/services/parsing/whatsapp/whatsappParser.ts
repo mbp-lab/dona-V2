@@ -4,9 +4,9 @@ import { daysBeforeMonths, normalizeDate, NumericDate } from "./utils/date";
 import { convertTime12to24, normalizeAMPM, normalizeTime } from "./utils/time";
 
 const regexStartsWithDateTime =
-  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:\s?([ap]\.?m\.?))?\]?/i;
+  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:[\s\u202f]?([ap]\.?m\.?))?\]?/i;
 const regexMessageEntryParser =
-  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:\s?([ap]\.?m\.?))?\]?(?:\s-|\s:)?\s?(?:(.+?):\s)?((?:.|\s)*)/i;
+  /\[?(\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}),?\s(\d{1,2}[.:]\d{1,2}(?:[.:]\d{1,2})?)(?:[\s\u202f]?([ap]\.?m\.?))?\]?(?:\s-|\s:)?\s?(?:(.+?):\s)?((?:.|\s)*)/i;
 
 type Options = {
   daysFirst?: boolean;
