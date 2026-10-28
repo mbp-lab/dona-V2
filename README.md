@@ -66,6 +66,7 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
   - `APP_PORT` — host port to bind the web app to in docker-compose (default: `3000`)
   - `APP_INTERNAL_PORT` — container/internal port the Next.js server listens on (default: `3000`)
   - `POSTGRES_HOST_PORT` — host port to bind Postgres to (default: `5432`)
+  - `COMPOSE_PROJECT_NAME` — docker-compose project name, which prefixes container and volume names (default: name of the folder containing `docker-compose.yml`)
   - Note: Next.js also respects the standard `PORT` environment variable. In docker-compose we automatically set `PORT` to `APP_INTERNAL_PORT`.
 
 ## Local Development with Hot-reload
@@ -188,7 +189,7 @@ DEFAULT_LANGUAGE=en
 docker compose up  # add -d to run detached
 ```
 
-On first run, this automatically builds the Docker image with the correct build arguments from the `. env` file. After code changes, use `docker compose up --build` to rebuild.
+On first run, this automatically builds the Docker image with the settings from the `.env` file (mounted as a build secret, so it is not stored in the image). After code changes, use `docker compose up --build` to rebuild.
 
 The app will be available at `http://localhost:${APP_PORT:-3000}`
 

@@ -3,7 +3,7 @@ services:
     image: postgres:15
     restart: unless-stopped
     ports:
-      - "5572:5432"
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -16,44 +16,14 @@ services:
   app:
     build:
       context: .
-      args:
-        - DEMO_MODE
-        - PUBLIC_DATA_DONATION_ENABLED
-        - DEMO_SHOW_HAS_TOKEN_BUTTON
-        - UPLOAD_TEST_ENABLED
-        - CONSENT_ENABLED
-        - TOKEN_REQUIRED
-        - DUPLICATE_DONATION_CHECK_ENABLED
-        - DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED
-        - ENABLED_LANGUAGES
-        - DEFAULT_LANGUAGE
-        - BROWSER_LANGUAGE_ENABLED
-        - ENABLED_DATA_SOURCES
-        - DONOR_ID_INPUT_METHOD
-        - DONOR_SURVEY_ENABLED
-        - FEEDBACK_SURVEY_ENABLED
-        - DONOR_SURVEY_LINK
-        - FEEDBACK_SURVEY_LINK
-        - NEXT_PUBLIC_MIN_CHATS_FOR_DONATION
-        - NEXT_PUBLIC_MIN_MESSAGES_PER_CHAT
-        - NEXT_PUBLIC_MIN_CONTACTS_PER_CHAT
-        - NEXT_PUBLIC_MAX_FEEDBACK_CHATS
-        - NEXT_PUBLIC_MIN_FEEDBACK_CHATS
-        - NEXT_PUBLIC_DEFAULT_FEEDBACK_CHATS
-        - NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK
+      secrets:
+        - env
     ports:
-      - "9018:3000"
+      - "${APP_PORT:-3000}:${APP_INTERNAL_PORT:-3000}"
     environment:
       - DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
       - NODE_ENV=production
-      - DEMO_MODE=$DEMO_MODE
-      - PUBLIC_DATA_DONATION_ENABLED=$PUBLIC_DATA_DONATION_ENABLED
-      - ENABLED_DATA_SOURCES=$ENABLED_DATA_SOURCES
-      - DONOR_ID_INPUT_METHOD=$DONOR_ID_INPUT_METHOD
-      - DONOR_SURVEY_ENABLED=$DONOR_SURVEY_ENABLED
-      - FEEDBACK_SURVEY_ENABLED=$FEEDBACK_SURVEY_ENABLED
-      - DONOR_SURVEY_LINK=$DONOR_SURVEY_LINK
-      - FEEDBACK_SURVEY_LINK=$FEEDBACK_SURVEY_LINK
+      - PORT=${APP_INTERNAL_PORT:-3000}
     env_file:
       - .env
     depends_on:
@@ -62,3 +32,7 @@ services:
 
 volumes:
   postgres-data:
+
+secrets:
+  env:
+    file: .env
