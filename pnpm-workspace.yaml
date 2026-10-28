@@ -1,0 +1,19 @@
+# Security overrides for transitive dependencies without a patched upstream release
+overrides:
+  "@esbuild-kit/core-utils>esbuild": ^0.25.12
+  moment: ^2.31.0
+  sqlite3: ^6.0.1
+
+# Dependency install scripts, reviewed. They only download or build native binaries
+# as a fallback, and the prebuilt binaries are installed separately.
+allowBuilds:
+  "@journeyapps/wa-sqlite": false
+  "@parcel/watcher": false
+  "@swc/core": false
+  esbuild: false
+  unrs-resolver: false
+
+permissions:
+  dotenv:
+    build: false
+    skills: false
