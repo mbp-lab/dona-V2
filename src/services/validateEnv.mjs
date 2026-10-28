@@ -19,7 +19,7 @@ export const validateEnv = () => {
   } catch (err) {
     throw new Error(
       err instanceof z.ZodError
-        ? `Environment validation failed: ${err.errors.map(e => e.message).join(", ")}`
+        ? `Environment validation failed: ${err.issues.map(e => e.message).join(", ")}`
         : `Unexpected error during environment validation: ${String(err)}`
     );
   }
