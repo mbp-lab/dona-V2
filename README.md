@@ -38,7 +38,7 @@ A Next.js platform for collecting and de-identifying social data to support rese
 
 ## Prerequisites
 
-- Node 22+ and PNPM installed
+- Node 22+ and PNPM 12 installed (the exact version is pinned in `packageManager` in `package.json`; pnpm 11+ switches to it automatically)
 - Docker (for containerized workflows and PostgreSQL)
 
 ## Environment Variables

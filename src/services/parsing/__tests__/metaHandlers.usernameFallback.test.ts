@@ -15,7 +15,7 @@ async function setupModule(
     { filename: "personal_information.json" },
     { filename: "inbox/test_thread/message_1.json" }
   ];
-  const mockExtractEntriesFromZips = jest.fn().mockResolvedValue(entries);
+  const mockExtractEntriesFromZips = jest.fn<(...args: unknown[]) => Promise<ZipEntryLike[]>>().mockResolvedValue(entries);
 
   const mockGetEntryText = jest.fn(async (entry: ZipEntryLike) => {
     if (options.textByFilename?.[entry.filename]) {
@@ -27,7 +27,7 @@ async function setupModule(
     return profileContentFactory();
   });
 
-  const mockDeIdentify = jest.fn(() => ({
+  const mockDeIdentify = jest.fn<(...args: unknown[]) => unknown>(() => ({
     anonymizedConversations: [],
     posts: [],
     comments: [],
@@ -39,7 +39,7 @@ async function setupModule(
   jest.doMock("@services/parsing/shared/aliasConfig", () => require("@services/__mocks__/aliasConfigMock"));
   jest.doMock("@services/parsing/shared/zipExtraction", () => ({
     extractEntriesFromZips: (...args: unknown[]) => mockExtractEntriesFromZips(...args),
-    getEntryText: (...args: unknown[]) => mockGetEntryText(...args),
+    getEntryText: (entry: ZipEntryLike) => mockGetEntryText(entry),
     isMatchingEntry: (entry: ZipEntryLike, pattern: string) => entry.filename.includes(pattern)
   }));
   jest.doMock("@services/parsing/meta/deIdentify", () => ({

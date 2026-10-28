@@ -15,7 +15,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN mkdir -p public/sql-wasm
 
 ENV HUSKY=0
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+# Keep the pnpm version in sync with "packageManager" in package.json
+RUN npm install -g pnpm@12.15.0 && pnpm install --frozen-lockfile
 
 COPY . .
 
