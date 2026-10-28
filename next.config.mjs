@@ -2,7 +2,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 import { validateEnv } from "./src/services/validateEnv.mjs";
 
 const env = validateEnv();
-const devOrigins = env.NEXT_ALLOWED_DEV_ORIGINS?.split(",") ?? [
+const devOrigins = process.env.NEXT_ALLOWED_DEV_ORIGINS ? process.env.NEXT_ALLOWED_DEV_ORIGINS.split(",") : [
   "127.0.0.1",
   "127.0.0.1:3000",
   "127.0.0.1:9012",

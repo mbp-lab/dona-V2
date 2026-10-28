@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/jest-globals";
 import { describe, expect, it, jest } from "@jest/globals";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
@@ -31,7 +31,7 @@ jest.mock("@/services/parsing/shared/aliasConfig", () => ({
   useAliasConfig: () => ({})
 }));
 
-const mockAnonymizeData = jest.fn();
+const mockAnonymizeData = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
 jest.mock("@/services/anonymization", () => ({
   anonymizeData: (...args: unknown[]) => mockAnonymizeData(...args)

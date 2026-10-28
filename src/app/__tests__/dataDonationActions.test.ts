@@ -1,11 +1,27 @@
-import { beforeEach, describe, expect, test, jest } from "@jest/globals";
+import { afterAll, beforeAll, beforeEach, describe, expect, test, jest } from "@jest/globals";
 
 import { createMockDbClient } from "@/app/__tests__/mockDbClient";
-import { appendConversationBatch, finalizeDonation, startDonation, checkForDuplicateConversations } from "@/app/data-donation/actions";
 import { DonationErrors } from "@/services/errors";
 
 describe("donation actions - unit", () => {
+  // The actions read their configuration on import, so pin it independently of the local .env
+  const originalDemoMode = process.env.DEMO_MODE;
+  const originalDuplicateCheck = process.env.DUPLICATE_DONATION_CHECK_ENABLED;
+  let actions: typeof import("@/app/data-donation/actions");
   let mock: ReturnType<typeof createMockDbClient>;
+
+  beforeAll(async () => {
+    process.env.DEMO_MODE = "false";
+    process.env.DUPLICATE_DONATION_CHECK_ENABLED = "true";
+    jest.resetModules();
+    actions = await import("@/app/data-donation/actions");
+  });
+
+  afterAll(() => {
+    process.env.DEMO_MODE = originalDemoMode;
+    process.env.DUPLICATE_DONATION_CHECK_ENABLED = originalDuplicateCheck;
+    jest.resetModules();
+  });
 
   beforeEach(() => {
     mock = createMockDbClient();
@@ -13,7 +29,7 @@ describe("donation actions - unit", () => {
 
   test("startDonation returns donationId and donorId on success", async () => {
     const { client } = mock;
-    const res = await startDonation(undefined, undefined, client);
+    const res = await actions.startDonation(undefined, undefined, client);
     expect(res.success).toBe(true);
     expect(res.data).toBeDefined();
     expect(typeof res.data!.donationId).toBe("string");
@@ -30,7 +46,7 @@ describe("donation actions - unit", () => {
         }) as any
     }).client;
 
-    const res = await startDonation("ext-1", undefined, throwing);
+    const res = await actions.startDonation("ext-1", undefined, throwing);
     expect(res.success).toBe(false);
     expect(res.error).toBeDefined();
     expect((res.error as any).reason).toBe(DonationErrors.TransactionFailed);
@@ -57,7 +73,7 @@ describe("donation actions - unit", () => {
       }
     ];
 
-    const result = await appendConversationBatch("don-1", "donor-uuid-1", batch as any, "Donor", client);
+    const result = await actions.appendConversationBatch("don-1", "donor-uuid-1", batch as any, "Donor", client);
     expect(result.success).toBe(true);
   });
 
@@ -78,7 +94,7 @@ describe("donation actions - unit", () => {
       }
     ];
 
-    const result = await appendConversationBatch("don-2", "donor-uuid-2", batch as any, "Donor", client);
+    const result = await actions.appendConversationBatch("don-2", "donor-uuid-2", batch as any, "Donor", client);
     expect(result.success).toBe(true);
   });
 
@@ -86,7 +102,7 @@ describe("donation actions - unit", () => {
     const { client } = mock;
 
     const graph = { nodes: [], edges: [] };
-    const res = await finalizeDonation("don-3", graph, client);
+    const res = await actions.finalizeDonation("don-3", graph, client);
     expect(res.success).toBe(true);
     expect(res.data).toBeDefined();
     expect(res.data!.donationId).toBe("don-3");
@@ -99,7 +115,7 @@ describe("donation actions - unit", () => {
       }
     }).client;
 
-    const res = await finalizeDonation("don-4", { foo: "bar" }, throwingTx);
+    const res = await actions.finalizeDonation("don-4", { foo: "bar" }, throwingTx);
     expect(res.success).toBe(false);
     expect(res.error).toBeDefined();
   });
@@ -114,7 +130,7 @@ describe("donation actions - unit", () => {
     } as any).client;
 
     const hashes = ["hash-a", "hash-b"];
-    const res = await checkForDuplicateConversations(hashes, overriding);
+    const res = await actions.checkForDuplicateConversations(hashes, overriding);
 
     expect(overriding.query!.conversations!.findMany).toHaveBeenCalled();
     expect(res.success).toBe(true);
@@ -133,7 +149,7 @@ describe("donation actions - unit", () => {
     } as any).client;
 
     const hashes = ["hash-a", "hash-b"];
-    const res = await checkForDuplicateConversations(hashes, overriding);
+    const res = await actions.checkForDuplicateConversations(hashes, overriding);
 
     expect(overriding.query!.conversations!.findMany).toHaveBeenCalled();
     expect(res.success).toBe(false);
