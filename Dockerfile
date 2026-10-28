@@ -13,8 +13,8 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN mkdir -p public/sql-wasm
 
-# Keep the pnpm major version in sync with .github/workflows/pr-tests.yml
-RUN npm install -g pnpm@10 && pnpm install --frozen-lockfile
+# Keep the pnpm version in sync with "packageManager" in package.json
+RUN npm install -g pnpm@12.15.0 && pnpm install --frozen-lockfile
 
 COPY . .
 
