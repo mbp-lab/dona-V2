@@ -101,9 +101,14 @@
     },
     "enrollment": {
       "body": "Um an der Studie teilzunehmen, müssen Sie sich anmelden und einen persönlichen Token erhalten. Das ist wichtig, damit Sie am Ende Ihre Vergütung erhalten können. Wenn Sie Ihren Token bereits per E-Mail erhalten haben, machen Sie bitte weiter.",
+      "noTokenBody": "Sie können ohne Token teilnehmen. Bitte fahren Sie mit den Datenspende-Schritten fort.",
       "signUpButton": "Ich muss mich anmelden",
       "hasTokenButton": "Ich habe meinen Token erhalten",
       "signupUrl": "https://landing.dona.tf.uni-bielefeld.de/"
+    },
+    "demoMode": {
+      "title": "Demo-Version",
+      "body": "Dies ist eine Demo-Version. Es werden keine Daten an uns übermittelt und es besteht kein Anspruch auf Vergütung."
     }
   },
   "learnMore": {
@@ -143,7 +148,29 @@
     },
     "continue": {
       "buttonsHeader": "Haben Sie Ihre Daten bereit?",
-      "body": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, können Sie jetzt mit der Einverständniserklärung und dem  Fragebogen beginnen. Im Anschluss können Sie dann Ihre Daten spenden."
+      "intro": "Wenn Sie anhand dieser Anleitung Ihre Daten erhalten haben, können Sie jetzt fortfahren.",
+      "uploadTest": "Prüfen Sie zuerst auf der kurzen Testseite, ob Ihre Dateien verarbeitet werden können.",
+      "consent": "Anschließend folgen die Einverständniserklärung und der Fragebogen.",
+      "donate": "Im Anschluss können Sie dann Ihre Daten spenden."
+    }
+  },
+  "testUpload": {
+    "title": "Testen, ob es funktioniert",
+    "placeholder": "Nutzen Sie diesen kurzen Check, um sicherzustellen, dass Ihre Dateien verarbeitet werden können, bevor Sie fortfahren.",
+    "datasourceTitle_format": "{datasource}-Daten testen",
+    "requirements": {
+      "title": "Prüfung der Anforderungen",
+      "minChats": "Es sind mindestens {MIN_CHATS_FOR_DONATION} Chats enthalten.",
+      "minImportantChats": "Mindestens {MIN_CHATS_FOR_DONATION} Chats haben jeweils mindestens {MIN_MESSAGES_PER_CHAT} Nachrichten und mindestens {MIN_CONTACTS_PER_CHAT} Chat-Teilnehmende.",
+      "minTimePeriod": "Die Daten umfassen mindestens {MIN_DONATION_TIME_PERIOD_MONTHS} Monate."
+    },
+    "success": "Alles sieht gut aus. Bitte fahren Sie fort.",
+    "errorHelp": "Es ist etwas schiefgelaufen. Mit diesen Daten können Sie nicht teilnehmen. Bitte helfen Sie uns, das Problem in dieser <link>Umfrage</link> zu verstehen.",
+    "consentHint": "Bitte führen Sie mindestens einen erfolgreichen Test durch, um fortzufahren.",
+    "copy": {
+      "button": "Fehlermeldung kopieren",
+      "success": "Kopiert",
+      "fail": "Kopieren fehlgeschlagen"
     }
   },
   "whatsapp": {

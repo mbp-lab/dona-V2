@@ -1,17 +1,29 @@
 import { AnonymizationResult, DataSourceValue } from "@models/processed";
+import { CONFIG } from "@/config";
 import { DonationErrors, DonationValidationError } from "@services/errors";
 import handleImessageDBFiles from "@services/parsing/imessage/imessageHandler";
 import { handleFacebookZipFiles, handleInstagramZipFiles } from "@services/parsing/meta/metaHandlers";
 import { extractTxtFilesFromZip } from "@services/parsing/shared/zipExtraction";
 import handleWhatsappTxtFiles from "@services/parsing/whatsapp/whatsappHandler";
+import { getDonationRequirementChecks, getFailedDonationRequirementErrors } from "@services/validation";
 import {
   validateMinChatsForDonation,
   validateMinImportantChatsForDonation,
   validateMinTimePeriodForDonation
 } from "@services/validation";
 
-export async function anonymizeData(dataSourceValue: DataSourceValue, files: File[]): Promise<AnonymizationResult> {
+interface AnonymizeDataOptions {
+  skipValidation?: boolean;
+  includePublicContent?: boolean;
+}
+
+export async function anonymizeData(
+  dataSourceValue: DataSourceValue,
+  files: File[],
+  options: AnonymizeDataOptions = {}
+): Promise<AnonymizationResult> {
   let resultPromise;
+  const includePublicContent = options.includePublicContent ?? CONFIG.PUBLIC_DATA_DONATION_ENABLED;
   switch (dataSourceValue) {
     case DataSourceValue.WhatsApp:
       const txtFiles: File[] = [];
@@ -31,10 +43,10 @@ export async function anonymizeData(dataSourceValue: DataSourceValue, files: Fil
       );
       break;
     case DataSourceValue.Facebook:
-      resultPromise = handleFacebookZipFiles(files);
+      resultPromise = handleFacebookZipFiles(files, { includePublicContent });
       break;
     case DataSourceValue.Instagram:
-      resultPromise = handleInstagramZipFiles(files);
+      resultPromise = handleInstagramZipFiles(files, { includePublicContent });
       break;
     case DataSourceValue.IMessage:
       resultPromise = handleImessageDBFiles(files);
@@ -43,17 +55,14 @@ export async function anonymizeData(dataSourceValue: DataSourceValue, files: Fil
 
   const result = await resultPromise;
 
-  // Validation for the number of conversations
-  if (!validateMinChatsForDonation(result.anonymizedConversations)) {
-    throw DonationValidationError(DonationErrors.TooFewChats);
+  if (options.skipValidation) {
+    return result;
   }
-  // Validation for the number of "important" conversations (based on number of messages and contacts)
-  if (!validateMinImportantChatsForDonation(result.anonymizedConversations)) {
-    throw DonationValidationError(DonationErrors.TooFewContactsOrMessages);
-  }
-  // Validation for the time period of the conversations
-  if (!validateMinTimePeriodForDonation(result.anonymizedConversations)) {
-    throw DonationValidationError(DonationErrors.TooShortTimePeriod);
+
+  const checks = getDonationRequirementChecks(result.anonymizedConversations);
+  const failures = getFailedDonationRequirementErrors(checks);
+  if (failures.length > 0) {
+    throw DonationValidationError(failures[0] as DonationErrors);
   }
 
   return result;

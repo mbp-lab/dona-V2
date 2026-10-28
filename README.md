@@ -48,12 +48,25 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` — used by docker-compose for local DB
 - `DATABASE_URL` — Postgres connection string used by the app (compose sets this automatically for the containerized app)
 - `DONOR_ID_INPUT_METHOD`, `DONOR_SURVEY_ENABLED`, `FEEDBACK_SURVEY_ENABLED`, `DONOR_SURVEY_LINK`, `FEEDBACK_SURVEY_LINK` — feature flags/links
-- `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, demo notices in flow, sample data downloads on feedback page, and no final survey CTA)
+- `ENABLED_LANGUAGES` — comma-separated active UI languages (supported values: `en,de,hy`)
+- `DEFAULT_LANGUAGE` — default UI language (must be one of `ENABLED_LANGUAGES`)
+- `BROWSER_LANGUAGE_ENABLED` — set to `true` to use the browser language when no locale cookie is set (default: `false`)
+- `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, no duplicate checks, demo notices in flow, sample data downloads on the instructions page, disabled consent PDF download, and no final survey CTA)
+- `DEMO_SHOW_HAS_TOKEN_BUTTON` — set to `true` to show the "I have received my token" button in demo mode
+- `UPLOAD_TEST_ENABLED` — set to `false` to skip the data file testing step before upload (default: `true`)
+- `CONSENT_ENABLED` — set to `false` to skip the declaration of consent. The donor ID step and the donor survey redirect still take place (default: `true`)
+- `TOKEN_REQUIRED` — set to `false` to allow users to proceed without a token (default: `true`)
+- `PUBLIC_DATA_DONATION_ENABLED` — set to `true` to collect Facebook/Instagram posts, comments, and reactions (default: `false`)
+- `DUPLICATE_DONATION_CHECK_ENABLED` — set to `false` to skip duplicate-donation rejection during upload. Conversation hashes are stored either way (default: `true`)
+- `DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED` — set to `true` to show the "Download Duplicate-Check CSV" button on the donation page, see [Duplicate-Check Exception Workflow](#duplicate-check-exception-workflow) (default: `false`)
+- `NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK` — minimum combined text+audio messages per conversation before a hash is computed (default: `50`)
+- `DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH` — path to a CSV containing allowed duplicate hashes (default: `public/documents/sample-data/duplicate-check-exceptions.csv`)
 - `ENABLED_DATA_SOURCES` — comma-separated list of enabled sources for the donation page (e.g. `WhatsApp,Facebook` or `WA,FB,IG,IMSG`)
 - Ports (configurable):
   - `APP_PORT` — host port to bind the web app to in docker-compose (default: `3000`)
   - `APP_INTERNAL_PORT` — container/internal port the Next.js server listens on (default: `3000`)
   - `POSTGRES_HOST_PORT` — host port to bind Postgres to (default: `5432`)
+  - `COMPOSE_PROJECT_NAME` — docker-compose project name, which prefixes container and volume names (default: name of the folder containing `docker-compose.yml`)
   - Note: Next.js also respects the standard `PORT` environment variable. In docker-compose we automatically set `PORT` to `APP_INTERNAL_PORT`.
 
 ## Local Development with Hot-reload
@@ -99,6 +112,15 @@ PORT=3001 pnpm dev
 ```bash
 pnpm test
 ```
+
+## Duplicate-Check Exception Workflow
+
+To allow known test exports without disabling duplicate checking globally:
+
+1. Set `DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED=true` and upload the test export in Dona (Data Donation page).
+2. Click **Download Duplicate-Check CSV** after parsing finishes.
+3. Add the CSV rows (or just the `conversationHash` column) to the file at `DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH`.
+4. Restart the app so new environment/config values are reloaded.
 
 ### Checking logs and data
 
@@ -151,9 +173,14 @@ APP_PORT=3000
 APP_INTERNAL_PORT=3000
 DONOR_ID_INPUT_METHOD=manually
 DONOR_SURVEY_ENABLED=false
+DEMO_MODE=false
+DEMO_SHOW_HAS_TOKEN_BUTTON=false
+PUBLIC_DATA_DONATION_ENABLED=false
 FEEDBACK_SURVEY_ENABLED=true
 DONOR_SURVEY_LINK=
 FEEDBACK_SURVEY_LINK=
+ENABLED_LANGUAGES=en,de
+DEFAULT_LANGUAGE=en
 ```
 
 2. Launch all services
@@ -162,7 +189,7 @@ FEEDBACK_SURVEY_LINK=
 docker compose up  # add -d to run detached
 ```
 
-On first run, this automatically builds the Docker image with the correct build arguments from the `. env` file. After code changes, use `docker compose up --build` to rebuild.
+On first run, this automatically builds the Docker image with the settings from the `.env` file (mounted as a build secret, so it is not stored in the image). After code changes, use `docker compose up --build` to rebuild.
 
 The app will be available at `http://localhost:${APP_PORT:-3000}`
 

@@ -2,6 +2,7 @@
 
 import Alert, { AlertProps } from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 import { FileList, FileUploadButton, RemoveButton } from "@components/DonationComponents";
 import styled from "@mui/material/styles/styled";
@@ -12,14 +13,19 @@ import { CONFIG } from "@/config";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { anonymizeData } from "@/services/anonymization";
 import { computeConversationHash, shouldHashConversation } from "@/services/conversationHash";
+import { collectDuplicateCheckFeatures, duplicateCheckFeaturesToCsv } from "@/services/duplicateCheckFeatures";
 import { checkForDuplicateConversations } from "@/app/data-donation/actions";
 import AnonymizationPreview from "@components/AnonymizationPreview";
 import DateRangePicker from "@components/DateRangePicker";
 import LoadingSpinner from "@components/LoadingSpinner";
-import { AnonymizationResult, Conversation, DataSourceValue } from "@models/processed";
+import { AnonymizationResult, Comment, Conversation, DataSourceValue, Post, Reaction } from "@models/processed";
 import { DonationErrors, getErrorMessage } from "@services/errors";
 import { calculateMinMaxDates, filterDataByRange, NullableRange, validateDateRange } from "@services/rangeFiltering";
 import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@services/validation";
+
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const duplicateCheckEnabled = !isDemoMode && CONFIG.DUPLICATE_DONATION_CHECK_ENABLED;
+const duplicateCheckCsvDownloadEnabled = CONFIG.DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED;
 
 const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...props} />)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -27,16 +33,24 @@ const UploadAlert = styled((props: AlertProps) => <Alert severity="error" {...pr
   width: "100%"
 }));
 
+export interface ContentData {
+  posts: Post[];
+  comments: Comment[];
+  reactions: Reaction[];
+}
+
 interface DonationDataSelectorProps {
   dataSourceValue: DataSourceValue;
   onDonatedConversationsChange: (newDonatedConversations: Conversation[]) => void;
   onFeedbackChatsChange: (newFeedbackChats: Set<string>) => void;
+  onContentDataChange?: (contentData: ContentData) => void;
 }
 
 const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
   dataSourceValue,
   onDonatedConversationsChange,
-  onFeedbackChatsChange
+  onFeedbackChatsChange,
+  onContentDataChange
 }) => {
   const donation = useRichTranslations("donation");
   const acceptedFileTypes =
@@ -72,23 +86,29 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       // Step 1: Anonymize data
       const result = await anonymizeData(dataSourceValue, files);
 
-      // Step 2: Compute hashes and check for duplicates with server
-      setLoadingStep(2);
+      // Hashes are always computed and stored, so that donations made while the duplicate check is
+      // disabled can still be detected once it is enabled again.
       const conversationsWithHashes = result.anonymizedConversations.map(convo => {
-        const hash = shouldHashConversation(convo) ? computeConversationHash(convo) : null;
+        const hash = shouldHashConversation(convo, CONFIG.MIN_MESSAGES_FOR_DUPLICATE_CHECK)
+          ? computeConversationHash(convo)
+          : null;
         return {
           ...convo,
           conversationHash: hash
         };
       });
 
-      const hashes = conversationsWithHashes
-        .map(convo => convo.conversationHash)
-        .filter((hash): hash is string => hash !== null);
-      if (hashes.length > 0) {
-        const duplicateCheck = await checkForDuplicateConversations(hashes);
-        if (!duplicateCheck.success) {
-          throw duplicateCheck.error;
+      if (duplicateCheckEnabled) {
+        // Step 2: Check for duplicates with server
+        setLoadingStep(2);
+        const hashes = conversationsWithHashes
+          .map(convo => convo.conversationHash)
+          .filter((hash): hash is string => hash !== null);
+        if (hashes.length > 0) {
+          const duplicateCheck = await checkForDuplicateConversations(hashes);
+          if (!duplicateCheck.success) {
+            throw duplicateCheck.error;
+          }
         }
       }
 
@@ -98,7 +118,8 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       setAnonymizationResult({ ...result, anonymizedConversations: conversationsWithHashes });
       setCalculatedRange([minDate, maxDate]);
       setFilteredConversations(conversationsWithHashes);
-      onDonatedConversationsChange(conversationsWithHashes); // Update data for parent
+      onDonatedConversationsChange(conversationsWithHashes);
+      onContentDataChange?.({ posts: result.posts, comments: result.comments, reactions: result.reactions });
     } catch (err) {
       const errorMessage = getErrorMessage(donation.t, err as Error, CONFIG);
       setError(errorMessage);
@@ -116,7 +137,8 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
     setAnonymizationResult(null);
     setFilteredConversations([]);
     onDonatedConversationsChange([]);
-    setFileInputKey(prevKey => prevKey + 1); // Update the key to reset the file input
+    onContentDataChange?.({ posts: [], comments: [], reactions: [] });
+    setFileInputKey(prevKey => prevKey + 1);
   };
 
   // Handle date range selection
@@ -141,6 +163,27 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       setFilteredConversations(filteredConversations);
       onDonatedConversationsChange(filteredConversations); // Update parent with filtered data
     }
+  };
+
+  const handleDownloadDuplicateCheckCsv = () => {
+    if (!anonymizationResult) {
+      return;
+    }
+
+    const features = collectDuplicateCheckFeatures(
+      anonymizationResult.anonymizedConversations,
+      CONFIG.MIN_MESSAGES_FOR_DUPLICATE_CHECK
+    );
+    const csvContent = duplicateCheckFeaturesToCsv(features);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `duplicate-check-features-${String(dataSourceValue).toLowerCase()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -168,9 +211,11 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       {isLoading && (
         <LoadingSpinner
           message={
-            loadingStep === 1
-              ? donation.t("anonymisation.processingStep", { step: "1/2" })
-              : donation.t("anonymisation.checkingDuplicatesStep", { step: "2/2" })
+            !duplicateCheckEnabled
+              ? donation.t("anonymisation.processingStep", { step: "1/1" })
+              : loadingStep === 1
+                ? donation.t("anonymisation.processingStep", { step: "1/2" })
+                : donation.t("anonymisation.checkingDuplicatesStep", { step: "2/2" })
           }
         />
       )}
@@ -178,6 +223,11 @@ const DonationDataSelector: React.FC<DonationDataSelectorProps> = ({
       {/* Display anonymized data */}
       {!error && !isLoading && anonymizationResult && filteredConversations && (
         <Box sx={{ my: 3 }}>
+          {duplicateCheckCsvDownloadEnabled && (
+            <Button variant="outlined" sx={{ mb: 2 }} onClick={handleDownloadDuplicateCheckCsv}>
+              Download Duplicate-Check CSV
+            </Button>
+          )}
           {dataSourceValue !== DataSourceValue.Facebook && dataSourceValue !== DataSourceValue.Instagram && (
             <>
               <DateRangePicker calculatedRange={calculatedRange} setSelectedRange={handleDateRangeChange} />

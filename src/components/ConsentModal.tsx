@@ -24,6 +24,7 @@ const idInputMethod = process.env.NEXT_PUBLIC_DONOR_ID_INPUT_METHOD as IdInputMe
 const isDonorSurveyEnabled = process.env.NEXT_PUBLIC_DONOR_SURVEY_ENABLED === "true";
 const donorSurveyLink = process.env.NEXT_PUBLIC_DONOR_SURVEY_LINK;
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const isConsentEnabled = process.env.NEXT_PUBLIC_CONSENT_ENABLED !== "false";
 
 export default function ConsentModal() {
   const actions = useRichTranslations("actions");
@@ -50,6 +51,10 @@ export default function ConsentModal() {
   }, []);
 
   const validateDonorId = async (id: string) => {
+    if (isDemoMode) {
+      return;
+    }
+
     if (!id.trim()) {
       return;
     }
@@ -93,7 +98,10 @@ export default function ConsentModal() {
         ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
         : "/data-donation";
   };
-  const handleOpen = () => setOpen(true);
+  // Continue after consent: either directly, or via the donor ID dialog
+  const handleProceed = idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true);
+  // Without consent, the consent modal is never opened and the donor continues directly
+  const handleOpen = isConsentEnabled ? () => setOpen(true) : handleProceed;
   const handleClose = () => setOpen(false);
   const handleDialogClose = () => setDialogOpen(false);
 
@@ -102,26 +110,36 @@ export default function ConsentModal() {
       <Button variant="contained" onClick={handleOpen}>
         {actions.t("donate")}
       </Button>
-      <FullSizeModal
-        open={open}
-        onClose={handleClose}
-        onAgree={idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true)}
-        ariaLabel="Consent Modal"
-      >
+      <FullSizeModal open={open} onClose={handleClose} onAgree={handleProceed} ariaLabel="Consent Modal">
         <Box sx={{ display: "flex" }}>
           <Typography variant="h4" sx={{ my: 4, flexGrow: 1 }} id="modal-modal-title">
             {consent.t("title")}
           </Typography>
           <Box sx={{ alignSelf: "center" }}>
-            <LinkButton variant="contained" target="_blank" href={consent.t("pdf.file")} size="small">
-              {consent.t("pdf.button")}
-            </LinkButton>
+            {isDemoMode ? (
+              <Button variant="contained" size="small" disabled>
+                {consent.t("pdf.button")}
+              </Button>
+            ) : (
+              <LinkButton variant="contained" target="_blank" href={consent.t("pdf.file")} size="small">
+                {consent.t("pdf.button")}
+              </LinkButton>
+            )}
           </Box>
         </Box>
 
         <BlockTitle>{consent.t("about.title")}</BlockTitle>
         {isDemoMode && (
-          <Box sx={{ my: 2, border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}>
+          <Box
+            sx={{
+              my: 2,
+              border: "2px solid",
+              borderColor: "warning.main",
+              borderRadius: 2,
+              p: 2,
+              bgcolor: "warning.light"
+            }}
+          >
             <Typography variant="h6">{consent.t("demoMode.title")}</Typography>
             <Typography>{consent.t("demoMode.body")}</Typography>
           </Box>

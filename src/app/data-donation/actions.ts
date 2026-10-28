@@ -1,19 +1,59 @@
 "use server";
 
+import fs from "fs/promises";
+import path from "path";
 import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/db/drizzle";
-import { conversationParticipants, conversations, donations, graphData, messages, messagesAudio } from "@/db/schema";
+import {
+  comments,
+  conversationParticipants,
+  conversations,
+  donations,
+  graphData,
+  messages,
+  messagesAudio,
+  posts,
+  reactions
+} from "@/db/schema";
 import { DbClient } from "@/db/types";
-import { NewConversation, NewMessage, NewMessageAudio } from "@models/persisted";
-import { Conversation, DonationStatus } from "@models/processed";
+import { NewComment, NewConversation, NewMessage, NewMessageAudio, NewPost, NewReaction } from "@models/persisted";
+import { Comment, Conversation, DonationStatus, Post, Reaction } from "@models/processed";
+import { parseDuplicateCheckExceptionHashesCsv } from "@/services/duplicateCheckExceptions";
 import { DonationStats } from "@services/donationStats";
 import { DonationErrors, DonationProcessingError, SerializedDonationError } from "@services/errors";
 
 const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
 const BULK_CHUNK = 2000; // chunk size for large bulk inserts
 const isDemoMode = process.env.DEMO_MODE === "true";
+const isDuplicateCheckEnabled = process.env.DUPLICATE_DONATION_CHECK_ENABLED !== "false";
+
+let cachedExceptionHashes: Set<string> | null = null;
+
+async function loadDuplicateCheckExceptionHashes(): Promise<Set<string>> {
+  if (cachedExceptionHashes) {
+    return cachedExceptionHashes;
+  }
+
+  const configuredPath =
+    process.env.DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH ||
+    "public/documents/sample-data/duplicate-check-exceptions.csv";
+  const csvPath = path.isAbsolute(configuredPath) ? configuredPath : path.join(process.cwd(), configuredPath);
+
+  try {
+    const csv = await fs.readFile(csvPath, "utf8");
+    cachedExceptionHashes = parseDuplicateCheckExceptionHashesCsv(csv);
+    console.log(`[DONATION] Loaded ${cachedExceptionHashes.size} duplicate-check exception hash(es) from ${csvPath}`);
+    return cachedExceptionHashes;
+  } catch (error: any) {
+    if (error?.code !== "ENOENT") {
+      console.warn(`[DONATION] Could not read duplicate-check exception file (${csvPath}): ${error?.message || error}`);
+    }
+    cachedExceptionHashes = new Set<string>();
+    return cachedExceptionHashes;
+  }
+}
 
 interface ActionResult<T = unknown> {
   success: boolean;
@@ -88,7 +128,9 @@ export async function appendConversationBatch(
     return { success: true, data: { inserted: batch.length } };
   }
 
-  console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
+  console.log(
+    `[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`
+  );
 
   try {
     const dataSources = (await dbClient.query.dataSources.findMany()) as any;
@@ -233,6 +275,68 @@ export async function appendConversationBatch(
   }
 }
 
+export async function appendContentData(
+  donationId: string,
+  postItems: Post[],
+  commentItems: Comment[],
+  reactionItems: Reaction[],
+  dbClient: DbClient = db
+): Promise<ActionResult> {
+  console.log(
+    `[DONATION][donationId=${donationId}] appendContentData: ${postItems.length} posts, ${commentItems.length} comments, ${reactionItems.length} reactions`
+  );
+
+  try {
+    const dataSources = (await dbClient.query.dataSources.findMany()) as any;
+
+    const resolveDataSourceId = (dataSource: string): number =>
+      dataSources.find((ds: any) => ds.name === dataSource)?.id ?? dataSources[0].id;
+
+    // Insert posts
+    if (postItems.length > 0) {
+      const postsToInsert = postItems.map(p => NewPost.create(donationId, resolveDataSourceId(p.dataSource), p));
+      for (let i = 0; i < postsToInsert.length; i += BULK_CHUNK) {
+        const chunk = postsToInsert.slice(i, i + BULK_CHUNK);
+        await dbClient.insert(posts).values(chunk);
+      }
+    }
+
+    // Insert comments
+    if (commentItems.length > 0) {
+      const commentsToInsert = commentItems.map(c =>
+        NewComment.create(donationId, resolveDataSourceId(c.dataSource), c)
+      );
+      for (let i = 0; i < commentsToInsert.length; i += BULK_CHUNK) {
+        const chunk = commentsToInsert.slice(i, i + BULK_CHUNK);
+        await dbClient.insert(comments).values(chunk);
+      }
+    }
+
+    // Insert reactions
+    if (reactionItems.length > 0) {
+      const reactionsToInsert = reactionItems.map(r =>
+        NewReaction.create(donationId, resolveDataSourceId(r.dataSource), r)
+      );
+      for (let i = 0; i < reactionsToInsert.length; i += BULK_CHUNK) {
+        const chunk = reactionsToInsert.slice(i, i + BULK_CHUNK);
+        await dbClient.insert(reactions).values(chunk);
+      }
+    }
+
+    console.log(`[DONATION][donationId=${donationId}] ✅ appendContentData`);
+    return { success: true };
+  } catch (err) {
+    console.error(`[DONATION][donationId=${donationId}] ❌ appendContentData:`, {
+      error: err,
+      stack: (err as any)?.stack
+    });
+    return {
+      success: false,
+      error: DonationProcessingError(DonationErrors.TransactionFailed, { originalError: err })
+    };
+  }
+}
+
 export async function finalizeDonation(
   donationId: string,
   graphDataRecord: Record<string, any>,
@@ -274,7 +378,7 @@ export async function checkForDuplicateConversations(
   hashes: string[],
   dbClient: DbClient = db
 ): Promise<ActionResult<{ hasDuplicates: boolean }>> {
-  if (isDemoMode) {
+  if (isDemoMode || !isDuplicateCheckEnabled) {
     return { success: true, data: { hasDuplicates: false } };
   }
 
@@ -282,16 +386,25 @@ export async function checkForDuplicateConversations(
 
   try {
     // Filter out null/empty hashes
-    const validHashes = hashes.filter(h => h && h.length > 0);
+    const validHashes = hashes.filter(h => h && h.length > 0).map(h => h.toLowerCase());
 
     if (validHashes.length === 0) {
       console.log(`[DONATION] ✅ checkForDuplicateConversations: no valid hashes to check`);
       return { success: true, data: { hasDuplicates: false } };
     }
 
+    const exceptionHashes = await loadDuplicateCheckExceptionHashes();
+    const hashesToCheck = validHashes.filter(hash => !exceptionHashes.has(hash));
+
+    if (hashesToCheck.length === 0) {
+      console.log(`[DONATION] ✅ checkForDuplicateConversations: all hashes are covered by configured exceptions`);
+      return { success: true, data: { hasDuplicates: false } };
+    }
+
     // Query database for existing conversations with these hashes
     const existingConversations = await dbClient.query.conversations.findMany({
-      where: (conversations: any, { inArray }: { inArray: any }) => inArray(conversations.conversationHash, validHashes),
+      where: (conversations: any, { inArray }: { inArray: any }) =>
+        inArray(conversations.conversationHash, hashesToCheck),
       columns: {
         conversationHash: true
       }

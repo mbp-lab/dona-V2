@@ -1,15 +1,57 @@
 import { DataSourceValue } from "@/models/processed";
+import { parse } from "path";
 
-export type Locale = (typeof locales)[number];
+const SUPPORTED_LOCALES = ["en", "de", "hy"] as const;
 
-export const locales = ["en", "de", "hy"] as const;
+export type Locale = (typeof SUPPORTED_LOCALES)[number];
+
 export const localeNames: Record<Locale, string> = {
   en: "English",
   de: "Deutsch",
   hy: "Armenian"
 };
-export const defaultLocale: Locale = "en";
 
+const parseEnabledLocales = (rawValue: string | undefined): Locale[] => {
+  if (!rawValue) {
+    return [...SUPPORTED_LOCALES];
+  }
+
+  const parsed = rawValue
+    .split(",")
+    .map(locale => locale.trim())
+    .filter((locale): locale is Locale => SUPPORTED_LOCALES.includes(locale as Locale));
+
+  // Ensure at least one language is available, even with malformed env input.
+  return parsed.length > 0 ? parsed : [...SUPPORTED_LOCALES];
+};
+
+const parseDefaultLocale = (rawValue: string | undefined, enabledLocales: Locale[]): Locale => {
+  if (rawValue && enabledLocales.includes(rawValue as Locale)) {
+    return rawValue as Locale;
+  }
+
+  return enabledLocales[0] ?? "en";
+};
+
+export const locales = parseEnabledLocales(process.env.NEXT_PUBLIC_ENABLED_LANGUAGES);
+export const defaultLocale = parseDefaultLocale(process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE, locales);
+
+const parseBooleanEnv = (value: string | undefined, defaultValue: boolean): boolean => {
+  if (value === undefined) {
+    return defaultValue;
+  }
+
+  return value.toLowerCase() === "true";
+};
+
+const parseNumberEnv = (value: string | undefined, defaultValue: number): number => {
+  if (!value) {
+    return defaultValue;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : defaultValue;
+};
 const DATA_SOURCE_ALIASES: Record<string, DataSourceValue> = {
   whatsapp: DataSourceValue.WhatsApp,
   wa: DataSourceValue.WhatsApp,
@@ -52,11 +94,19 @@ export const ENABLED_DATA_SOURCES = parseEnabledDataSources(process.env.NEXT_PUB
 export const CONFIG = {
   MIN_DONATION_TIME_PERIOD_MONTHS: 6,
 
-  MIN_CHATS_FOR_DONATION: 5,
-  MIN_MESSAGES_PER_CHAT: 100,
-  MIN_CONTACTS_PER_CHAT: 2,
+  MIN_CHATS_FOR_DONATION: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_CHATS_FOR_DONATION, 5),
+  MIN_MESSAGES_PER_CHAT: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_MESSAGES_PER_CHAT, 100),
+  MIN_CONTACTS_PER_CHAT: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_CONTACTS_PER_CHAT, 2),
 
-  MAX_FEEDBACK_CHATS: 10,
-  MIN_FEEDBACK_CHATS: 3,
-  DEFAULT_FEEDBACK_CHATS: 5
+  DUPLICATE_DONATION_CHECK_ENABLED: parseBooleanEnv(process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED, true),
+  DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED: parseBooleanEnv(
+    process.env.NEXT_PUBLIC_DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED,
+    false
+  ),
+  MIN_MESSAGES_FOR_DUPLICATE_CHECK: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK, 50),
+  PUBLIC_DATA_DONATION_ENABLED: parseBooleanEnv(process.env.NEXT_PUBLIC_PUBLIC_DATA_DONATION_ENABLED, false),
+
+  MAX_FEEDBACK_CHATS: parseNumberEnv(process.env.NEXT_PUBLIC_MAX_FEEDBACK_CHATS, 10),
+  MIN_FEEDBACK_CHATS: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_FEEDBACK_CHATS, 3),
+  DEFAULT_FEEDBACK_CHATS: parseNumberEnv(process.env.NEXT_PUBLIC_DEFAULT_FEEDBACK_CHATS, 5)
 };
