@@ -6,10 +6,14 @@
  *
  * Loads fully qualified emojis from unicode_org_fully_qualified_emojis.txt
  * This file contains ~4000 emojis extracted from the official Unicode emoji test data.
+ * 
+ * Note: This file uses Node.js 'fs' module and should only be imported in server-side code.
+ * Client components should import EMOJI_REGEX from emojiRegex.ts instead.
  */
 
 import fs from "fs";
 import path from "path";
+import { EMOJI_REGEX } from "./emojiRegex";
 
 /**
  * Lazy-loaded emoji set for performance
@@ -52,10 +56,10 @@ export function getEmojiSet(): Set<string> {
 }
 
 /**
- * Regex pattern to match all emojis
- * This pattern matches emoji characters including those with skin tone modifiers
+ * Re-export EMOJI_REGEX for backwards compatibility
+ * Note: For client components, import directly from emojiRegex.ts to avoid Node.js dependencies
  */
-export const EMOJI_REGEX = /\p{Extended_Pictographic}/gu;
+export { EMOJI_REGEX };
 
 /**
  * For backwards compatibility - exports the emoji set

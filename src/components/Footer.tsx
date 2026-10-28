@@ -30,10 +30,14 @@ export default function Footer() {
         textAlign: "center"
       }}
     >
-      <Container>
+      <Container disableGutters>
         <Stack direction={isMobile ? "column" : "row"} spacing={0} justifyContent="space-between" alignItems="center">
           {/* Left: Buttons */}
-          <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap", justifyContent: isMobile ? "center" : "flex-start" }}>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ flexWrap: "wrap", justifyContent: isMobile ? "center" : "flex-start" }}
+          >
             <FooterButton variant="text" size={isMobile ? "small" : "medium"} href="/data-protection">
               {links("dataProtection")}
             </FooterButton>
@@ -46,10 +50,20 @@ export default function Footer() {
           <Stack direction="column" alignItems="center" sx={{ mt: isMobile ? 2 : 0 }}>
             <Stack direction="row" spacing={2} alignItems="center" sx={{ flexWrap: "wrap", justifyContent: "center" }}>
               <Link href="https://www.bmbf.de/" target="_blank">
-                <Image src="images/logos/BMBF_logo.svg" alt="Bundesministerium für Bildung und Forschung (BMBF) logo" width={90} height={50} />
+                <Image
+                  src="images/logos/BMBF_logo.svg"
+                  alt="Bundesministerium für Bildung und Forschung (BMBF) logo"
+                  width={90}
+                  height={50}
+                />
               </Link>
               <Link href="https://www.hpi.de" target="_blank">
-                <Image src="images/logos/HPI_logo.svg" alt="Hasso Plattner Institut (HPI) logo" width={90} height={50} />
+                <Image
+                  src="images/logos/HPI_logo.svg"
+                  alt="Hasso Plattner Institut (HPI) logo"
+                  width={90}
+                  height={50}
+                />
               </Link>
               <Link href="https://www.data4life.care/" target="_blank">
                 <Image src="images/logos/data4life-blueLogo.svg" alt="Data 4 Life logo" width={80} height={50} />

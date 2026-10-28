@@ -2,8 +2,6 @@
 
 A Next.js platform for collecting and de-identifying social data to support research on mental wellbeing.
 
-The previous version of the application is available in the legacy repository: https://github.com/mbp-lab/dona
-
 ## Table of Contents
 
 - [Overview](#overview)
@@ -19,7 +17,7 @@ The previous version of the application is available in the legacy repository: h
 
 ## Overview
 
-- **Tech stack**: Next.js 15 (App Router), React 19, TypeScript, Drizzle ORM + PostgreSQL, next-intl, PNPM, Docker.
+- **Tech stack**: Next.js 16 (App Router), React 19, TypeScript, Drizzle ORM + PostgreSQL, next-intl, PNPM, Docker.
 - **Primary features**: local-first data processing, pseudonymization, donation workflow, analytics previews.
 
 ## Repository Architecture
@@ -40,7 +38,7 @@ The previous version of the application is available in the legacy repository: h
 
 ## Prerequisites
 
-- Node 22+ and PNPM installed
+- Node 22+ and PNPM 12 installed (the exact version is pinned in `packageManager` in `package.json`; pnpm 11+ switches to it automatically)
 - Docker (for containerized workflows and PostgreSQL)
 
 ## Environment Variables
@@ -50,6 +48,8 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` — used by docker-compose for local DB
 - `DATABASE_URL` — Postgres connection string used by the app (compose sets this automatically for the containerized app)
 - `DONOR_ID_INPUT_METHOD`, `DONOR_SURVEY_ENABLED`, `FEEDBACK_SURVEY_ENABLED`, `DONOR_SURVEY_LINK`, `FEEDBACK_SURVEY_LINK` — feature flags/links
+- `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, demo notices in flow, sample data downloads on feedback page, and no final survey CTA)
+- `ENABLED_DATA_SOURCES` — comma-separated list of enabled sources for the donation page (e.g. `WhatsApp,Facebook` or `WA,FB,IG,IMSG`)
 - Ports (configurable):
   - `APP_PORT` — host port to bind the web app to in docker-compose (default: `3000`)
   - `APP_INTERNAL_PORT` — container/internal port the Next.js server listens on (default: `3000`)
@@ -385,3 +385,8 @@ Relations and schema notes
 - Check for outdated packages: `pnpm outdated`
 - Investigate dependency usage: `pnpm why <package-name>`
 - Always run tests and the app after updates: `pnpm test`; `pnpm dev` or `pnpm start`
+
+## Credits
+
+- The first version of this application – featuring a hybrid stack of Scala and Javascript – was developed by the [MBP Lab at the University of Bielefeld](https://github.com/mbp-lab).
+- A full rewrite and subsequent iterations were implemented by [Jason Robert](https://github.com/jasonr2048) as contracted work.

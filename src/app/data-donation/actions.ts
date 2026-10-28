@@ -13,6 +13,7 @@ import { DonationErrors, DonationProcessingError, SerializedDonationError } from
 
 const MAX_MESSAGES_PER_TX = 10000; // max messages (text + audio) per DB transaction
 const BULK_CHUNK = 2000; // chunk size for large bulk inserts
+const isDemoMode = process.env.DEMO_MODE === "true";
 
 interface ActionResult<T = unknown> {
   success: boolean;
@@ -29,6 +30,16 @@ export async function startDonation(
   stats?: DonationStats,
   dbClient: DbClient = db
 ): Promise<ActionResult<{ donationId: string; donorId: string }>> {
+  if (isDemoMode) {
+    return {
+      success: true,
+      data: {
+        donationId: "demo-mode",
+        donorId: "demo-mode"
+      }
+    };
+  }
+
   const donorId = uuidv4();
   const externalIdToUse = externalDonorId || generateExternalDonorId();
   console.log(`[DONATION][donorId=${donorId}] startDonation: externalDonorId=${externalIdToUse}`);
@@ -73,6 +84,10 @@ export async function appendConversationBatch(
   donorAlias: string,
   dbClient: DbClient = db
 ): Promise<ActionResult<{ inserted: number }>> {
+  if (isDemoMode) {
+    return { success: true, data: { inserted: batch.length } };
+  }
+
   console.log(`[DONATION][donorId=${donorId}][donationId=${donationId}] appendConversationBatch: batchSize=${batch.length}`);
 
   try {
@@ -223,6 +238,10 @@ export async function finalizeDonation(
   graphDataRecord: Record<string, any>,
   dbClient: DbClient = db
 ): Promise<ActionResult<{ donationId: string }>> {
+  if (isDemoMode) {
+    return { success: true, data: { donationId: "demo-mode" } };
+  }
+
   console.log(`[DONATION][donationId=${donationId}] finalizeDonation`);
   try {
     await dbClient.transaction(async tx => {
@@ -255,6 +274,10 @@ export async function checkForDuplicateConversations(
   hashes: string[],
   dbClient: DbClient = db
 ): Promise<ActionResult<{ hasDuplicates: boolean }>> {
+  if (isDemoMode) {
+    return { success: true, data: { hasDuplicates: false } };
+  }
+
   console.log(`[DONATION] checkForDuplicateConversations: checking ${hashes.length} hashes`);
 
   try {

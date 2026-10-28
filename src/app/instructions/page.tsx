@@ -1,15 +1,17 @@
+"use client";
+
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTranslations } from "next-intl";
 
 import ConsentModal from "@/components/ConsentModal";
+import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@components/CustomIcon";
 import DatasourceSpecificInstructions from "@components/DatasourceSpecificInstructions";
@@ -39,7 +41,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <WhatsAppIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Whatsapp" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "Whatsapp" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.WhatsApp} />
@@ -49,7 +53,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <FacebookIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Facebook" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "Facebook" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.Facebook} />
@@ -59,7 +65,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <InstagramIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "Instagram" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "Instagram" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.Instagram} />
@@ -69,7 +77,9 @@ export default function Instructions() {
           <Accordion sx={{ my: 1 }}>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
               <IMessageIcon sx={{ mr: 1, mt: 0.5 }} />
-              <Typography variant="h6">{instructions.t("datasource.title_format", { datasource: "iMessage" })}</Typography>
+              <Typography variant="h6">
+                {instructions.t("datasource.title_format", { datasource: "iMessage" })}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <DatasourceSpecificInstructions dataSource={DataSourceValue.IMessage} />
@@ -82,9 +92,9 @@ export default function Instructions() {
             {instructions.t("continue.buttonsHeader")}
           </Typography>
           <Stack spacing={2} direction="row" sx={{ justifyContent: "center" }}>
-            <Button variant="contained" href="/">
+            <LinkButton variant="contained" href="/">
               {a("previous")}
-            </Button>
+            </LinkButton>
             <ConsentModal />
           </Stack>
         </Box>

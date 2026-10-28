@@ -13,6 +13,7 @@ import { useLocale } from "next-intl";
 import React, { useEffect, useState } from "react";
 
 import { checkDonorIdExists } from "@/app/instructions/actions";
+import { LinkButton } from "@/components/LinkButton";
 import { generateExternalDonorId, useDonation } from "@/context/DonationContext";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, ContactBlock } from "@/styles/StyledTypography";
@@ -22,6 +23,7 @@ import { IdInputMethod } from "@models/settings";
 const idInputMethod = process.env.NEXT_PUBLIC_DONOR_ID_INPUT_METHOD as IdInputMethod;
 const isDonorSurveyEnabled = process.env.NEXT_PUBLIC_DONOR_SURVEY_ENABLED === "true";
 const donorSurveyLink = process.env.NEXT_PUBLIC_DONOR_SURVEY_LINK;
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 export default function ConsentModal() {
   const actions = useRichTranslations("actions");
@@ -86,7 +88,10 @@ export default function ConsentModal() {
       setExternalDonorId(manualId);
     }
 
-    window.location.href = isDonorSurveyEnabled && donorSurveyLink ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/data-donation";
+    window.location.href =
+      isDonorSurveyEnabled && donorSurveyLink
+        ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
+        : "/data-donation";
   };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -97,19 +102,30 @@ export default function ConsentModal() {
       <Button variant="contained" onClick={() => setDialogOpen(true)}>
         {actions.t("donate")}
       </Button>
-      {/*      <FullSizeModal open={open} onClose={handleClose} onAgree={idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true)} ariaLabel="Consent Modal">
+      <FullSizeModal
+        open={open}
+        onClose={handleClose}
+        onAgree={idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true)}
+        ariaLabel="Consent Modal"
+      >
         <Box sx={{ display: "flex" }}>
           <Typography variant="h4" sx={{ my: 4, flexGrow: 1 }} id="modal-modal-title">
             {consent.t("title")}
           </Typography>
           <Box sx={{ alignSelf: "center" }}>
-            <Button variant="contained" target="_blank" href={consent.t("pdf.file")} size="small">
+            <LinkButton variant="contained" target="_blank" href={consent.t("pdf.file")} size="small">
               {consent.t("pdf.button")}
-            </Button>
+            </LinkButton>
           </Box>
         </Box>
 
         <BlockTitle>{consent.t("about.title")}</BlockTitle>
+        {isDemoMode && (
+          <Box sx={{ my: 2, border: "2px solid", borderColor: "warning.main", borderRadius: 2, p: 2, bgcolor: "warning.light" }}>
+            <Typography variant="h6">{consent.t("demoMode.title")}</Typography>
+            <Typography>{consent.t("demoMode.body")}</Typography>
+          </Box>
+        )}
         <Typography>{consent.t("about.body1")}</Typography>
         <Typography sx={{ mt: 1 }}>{consent.t("about.body2")}</Typography>
 
@@ -147,7 +163,16 @@ export default function ConsentModal() {
             )}
             {idInputMethod === IdInputMethod.MANUALLY && (
               <>
-                <TextField label={donor.t("yourId")} value={manualId} onChange={handleManualIdChange} fullWidth sx={{ mt: 1 }} error={!!idError} helperText={<span style={{ minHeight: "1em", display: "block" }}>{idError || "\u00A0"}</span>} disabled={isValidating} />
+                <TextField
+                  label={donor.t("yourId")}
+                  value={manualId}
+                  onChange={handleManualIdChange}
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  error={!!idError}
+                  helperText={<span style={{ minHeight: "1em", display: "block" }}>{idError || "\u00A0"}</span>}
+                  disabled={isValidating}
+                />
               </>
             )}
           </DialogContent>
@@ -157,7 +182,11 @@ export default function ConsentModal() {
                 <Button onClick={handleDialogClose}>{actions.t("close")}</Button>
               </Box>
               <Box>
-                <Button onClick={handleAgree} variant="contained" disabled={idInputMethod === IdInputMethod.MANUALLY && (!!idError || !manualId.trim() || isValidating)}>
+                <Button
+                  onClick={handleAgree}
+                  variant="contained"
+                  disabled={idInputMethod === IdInputMethod.MANUALLY && (!!idError || !manualId.trim() || isValidating)}
+                >
                   {actions.t("next")}
                 </Button>
               </Box>

@@ -53,10 +53,19 @@ function computeDateTime(date: string, time: string, ampm: string | null, daysFi
   }
   [year, month, day] = normalizeDate(year, month, day);
 
-  const [hours, minutes, seconds] = normalizeTime(ampm ? convertTime12to24(time, normalizeAMPM(ampm)) : time).split(/[:.]/);
+  const [hours, minutes, seconds] = normalizeTime(ampm ? convertTime12to24(time, normalizeAMPM(ampm)) : time).split(
+    /[:.]/
+  );
 
   // Convert month and year to numbers before using them in Date constructor
-  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes), Number(seconds)).getTime();
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hours),
+    Number(minutes),
+    Number(seconds)
+  ).getTime();
 }
 
 /**

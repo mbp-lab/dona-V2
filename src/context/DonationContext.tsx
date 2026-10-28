@@ -3,7 +3,7 @@
 import Cookies from "js-cookie";
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
-import { DONATION_ID_COOKIE, EXTERNAL_DONOR_ID_COOKIE } from "@/middleware";
+import { DONATION_ID_COOKIE, EXTERNAL_DONOR_ID_COOKIE } from "@/proxy";
 import { GraphData } from "@models/graphData";
 import { DataSourceValue } from "@models/processed";
 

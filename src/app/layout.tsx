@@ -1,23 +1,22 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import Image from "next/image";
-import Link from "next/link";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import React from "react";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { LinkButton } from "@/components/LinkButton";
 import "@/styles/globals.css";
 import { Locale } from "@/config";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 
 import { DonationProvider } from "@/context/DonationContext";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Dona",
@@ -31,7 +30,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
   return (
     <html lang={locale}>
-      <body className={inter.className} style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <body style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <NextIntlClientProvider messages={messages}>
           <DonationProvider>
             <CssBaseline />
@@ -39,8 +38,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
             {/* Universität Bielefeld Button */}
             <Box sx={{ display: "flex", justifyContent: "flex-start", pl: 2, mt: 1 }}>
-              <Button
-                component={Link}
+              <LinkButton
                 href={uniBielefeldUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -51,7 +49,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 }}
               >
                 <Image src="/images/logos/uni-bielefeld-logo.svg" alt="Universität Bielefeld" width={150} height={75} />
-              </Button>
+              </LinkButton>
             </Box>
 
             <Box sx={{ flex: "1 0 auto" }}>{children}</Box>

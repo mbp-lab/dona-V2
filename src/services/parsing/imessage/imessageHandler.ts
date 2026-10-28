@@ -1,21 +1,27 @@
-import { Database } from "sql.js";
-
 import { AnonymizationResult, Conversation, DataSourceValue, Message, MessageAudio } from "@/models/processed";
 import { ChatPseudonyms, ContactPseudonyms } from "@/services/parsing/shared/pseudonyms";
 import { DonationErrors, DonationValidationError } from "@services/errors";
 import { getAliasConfig } from "@services/parsing/shared/aliasConfig";
 import emojiCount from "@services/parsing/shared/emojiCount";
+import { SQLiteAdapter } from "./sqliteAdapter";
+import { WaSQLiteAdapter } from "./waSqliteAdapter";
 
-export default async function handleImessageDBFiles(files: File[]): Promise<AnonymizationResult> {
+export default async function handleImessageDBFiles(
+  files: File[],
+  dbAdapter?: SQLiteAdapter
+): Promise<AnonymizationResult> {
   if (files.length !== 1) {
     throw DonationValidationError(DonationErrors.NotSingleDBFile);
   }
 
+  // Use provided adapter or default to WaSQLite for browser
+  const adapter = dbAdapter || new WaSQLiteAdapter();
+
   // Get data from database
-  const db = await createDatabase(files[0]);
-  const messages: any[] = getMessages(db);
-  const groupChats: Map<string, string> = getGroupChats(db);
-  db.close();
+  await adapter.open(files[0]);
+  const messages: any[] = await getMessages(adapter);
+  const groupChats: Map<string, string> = await getGroupChats(adapter);
+  await adapter.close();
 
   const aliasConfig = getAliasConfig();
   let donorName = "";
@@ -97,60 +103,46 @@ export default async function handleImessageDBFiles(files: File[]): Promise<Anon
   };
 }
 
-async function createDatabase(file: File): Promise<Database> {
-  const sqlPromise = import("sql.js/dist/sql-wasm.js");
-  const SQL = await sqlPromise;
-  const sqlWasm = await SQL.default({
-    locateFile: (file: string) => `/sql-wasm/${file}`
-  });
-
-  // Read the file as an ArrayBuffer
-  const fileBuffer = await file.arrayBuffer();
-  // Create a database using the file data
-  return new sqlWasm.Database(new Uint8Array(fileBuffer));
-}
-
 // Helper function to get messages from the database
-function getMessages(db: Database): any[] {
-  const messages: any[] = [];
-  const messagesStmt = db.prepare(`
-        SELECT COALESCE(m.text, '') AS text,
-               m.date,
-               COALESCE(m.handle_id, 0) AS handle_id,
-               COALESCE(c.group_id, '') AS group_id,
-               COALESCE(c.room_name, '') AS room_name,
-               COALESCE(m.is_from_me, 0) AS is_from_me,
-               COALESCE(m.is_audio_message, 0) AS is_audio_message,
-               COALESCE(m.error, 0) AS error,
-               COALESCE(a.mime_type, '') AS mime_type
-        FROM message m
-                 LEFT JOIN chat_message_join cmj ON m.ROWID = cmj.message_id
-                 LEFT JOIN chat c ON cmj.chat_id = c.ROWID
-                 LEFT JOIN message_attachment_join maj ON maj.message_id = m.ROWID
-                 LEFT JOIN attachment a ON maj.attachment_id = a.ROWID
-        WHERE m.error = 0 AND c.group_id IS NOT NULL;
-    `);
-  while (messagesStmt.step()) {
-    const row = messagesStmt.getAsObject();
-    messages.push(row);
-  }
-  messagesStmt.free();
-  return messages;
+async function getMessages(adapter: SQLiteAdapter): Promise<any[]> {
+  const sql = `
+    SELECT COALESCE(m.text, '') AS text,
+           m.date,
+           COALESCE(m.handle_id, 0) AS handle_id,
+           COALESCE(c.group_id, '') AS group_id,
+           COALESCE(c.room_name, '') AS room_name,
+           COALESCE(m.is_from_me, 0) AS is_from_me,
+           COALESCE(m.is_audio_message, 0) AS is_audio_message,
+           COALESCE(m.error, 0) AS error,
+           COALESCE(a.mime_type, '') AS mime_type
+    FROM message m
+             LEFT JOIN chat_message_join cmj ON m.ROWID = cmj.message_id
+             LEFT JOIN chat c ON cmj.chat_id = c.ROWID
+             LEFT JOIN message_attachment_join maj ON maj.message_id = m.ROWID
+             LEFT JOIN attachment a ON maj.attachment_id = a.ROWID
+    WHERE m.error = 0 AND c.group_id IS NOT NULL;
+  `;
+
+  return adapter.query(sql);
 }
 
 // Helper function to get chat information from the database
-function getGroupChats(db: Database): Map<string, string> {
+async function getGroupChats(adapter: SQLiteAdapter): Promise<Map<string, string>> {
   const groupChats = new Map<string, string>();
-  const groupInfoStmt = db.prepare(`
-        SELECT group_id, display_name
-        FROM chat
-        WHERE group_id IS NOT NULL;
-    `);
 
-  while (groupInfoStmt.step()) {
-    const row = groupInfoStmt.getAsObject();
-    groupChats.set(String(row.group_id ?? ""), String(row.display_name ?? ""));
-  }
-  groupInfoStmt.free();
+  const sql = `
+    SELECT group_id, display_name
+    FROM chat
+    WHERE group_id IS NOT NULL;
+  `;
+
+  const results = await adapter.query(sql);
+
+  results.forEach(row => {
+    const group_id = String(row.group_id ?? "");
+    const display_name = String(row.display_name ?? "");
+    groupChats.set(group_id, display_name);
+  });
+
   return groupChats;
 }

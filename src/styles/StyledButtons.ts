@@ -1,7 +1,9 @@
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 
-export const FooterButton = styled(Button)(({ theme }) => ({
+import { LinkButton } from "@/components/LinkButton";
+
+export const FooterButton = styled(LinkButton)(({ theme }) => ({
   textTransform: "none",
   fontSize: "0.875rem",
   [theme.breakpoints.down("sm")]: {
