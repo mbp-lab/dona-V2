@@ -151,7 +151,6 @@ export default function ConsentModal() {
           {consent.t("confirmation")}
         </Typography>
       </FullSizeModal>
-*/}
       {idInputMethod !== IdInputMethod.AUTOMATED && (
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle>{idInputMethod === IdInputMethod.SHOW_ID ? donor.t("remember") : donor.t("enter")}</DialogTitle>
