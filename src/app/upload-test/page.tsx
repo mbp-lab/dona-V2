@@ -25,7 +25,7 @@ export default function UploadTestPage() {
   const router = useRouter();
   const actions = useTranslations("actions");
   const testUpload = useRichTranslations("testUpload");
-  const isUploadTestEnabled = process.env.NEXT_PUBLIC_UPLOAD_TEST_ENABLED !== "false";
+  const isUploadTestEnabled = process.env.UPLOAD_TEST_ENABLED !== "false";
 
   const [validBySource, setValidBySource] = useState<Record<DataSourceValue, boolean>>(
     {} as Record<DataSourceValue, boolean>

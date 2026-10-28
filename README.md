@@ -45,9 +45,11 @@ A Next.js platform for collecting and de-identifying social data to support rese
 
 Create a `.env` file in the project root, by copying and renaming `.env.example`. Common variables:
 
-- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` — used by docker-compose for local DB
-- `DATABASE_URL` — Postgres connection string used by the app (compose sets this automatically for the containerized app)
-- `DONOR_ID_INPUT_METHOD`, `DONOR_SURVEY_ENABLED`, `FEEDBACK_SURVEY_ENABLED`, `DONOR_SURVEY_LINK`, `FEEDBACK_SURVEY_LINK` — feature flags/links
+- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` — credentials of the docker-compose Postgres container
+- `POSTGRES_HOST_PORT` — host port to bind Postgres to (default: `5432`)
+- `DATABASE_URL` — Postgres connection string for running the app or drizzle-kit on the host. Ignored inside docker-compose, which builds it from the `POSTGRES_*` values
+- `DONOR_ID_INPUT_METHOD` — `automated`, `showid`, or `manually` (default: `automated`)
+- `DONOR_SURVEY_LINK`, `FEEDBACK_SURVEY_LINK` — survey links; a survey is shown when its link is set (default: empty)
 - `ENABLED_LANGUAGES` — comma-separated active UI languages (supported values: `en,de,hy`)
 - `DEFAULT_LANGUAGE` — default UI language (must be one of `ENABLED_LANGUAGES`)
 - `BROWSER_LANGUAGE_ENABLED` — set to `true` to use the browser language when no locale cookie is set (default: `false`)
@@ -59,15 +61,13 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `PUBLIC_DATA_DONATION_ENABLED` — set to `true` to collect Facebook/Instagram posts, comments, and reactions (default: `false`)
 - `DUPLICATE_DONATION_CHECK_ENABLED` — set to `false` to skip duplicate-donation rejection during upload. Conversation hashes are stored either way (default: `true`)
 - `DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED` — set to `true` to show the "Download Duplicate-Check CSV" button on the donation page, see [Duplicate-Check Exception Workflow](#duplicate-check-exception-workflow) (default: `false`)
-- `NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK` — minimum combined text+audio messages per conversation before a hash is computed (default: `50`)
+- `MIN_MESSAGES_FOR_DUPLICATE_CHECK` — minimum combined text+audio messages per conversation before a hash is computed (default: `50`)
 - `DUPLICATE_CHECK_EXCEPTION_HASHES_CSV_PATH` — path to a CSV containing allowed duplicate hashes (default: `public/documents/sample-data/duplicate-check-exceptions.csv`)
 - `ENABLED_DATA_SOURCES` — comma-separated list of enabled sources for the donation page (e.g. `WhatsApp,Facebook` or `WA,FB,IG,IMSG`)
 - Ports (configurable):
   - `APP_PORT` — host port to bind the web app to in docker-compose (default: `3000`)
-  - `APP_INTERNAL_PORT` — container/internal port the Next.js server listens on (default: `3000`)
-  - `POSTGRES_HOST_PORT` — host port to bind Postgres to (default: `5432`)
   - `COMPOSE_PROJECT_NAME` — docker-compose project name, which prefixes container and volume names (default: name of the folder containing `docker-compose.yml`)
-  - Note: Next.js also respects the standard `PORT` environment variable. In docker-compose we automatically set `PORT` to `APP_INTERNAL_PORT`.
+  - `PORT` — port of `pnpm dev` / `pnpm start` on the host (default: `3000`); ignored inside docker-compose
 
 ## Local Development with Hot-reload
 
@@ -90,7 +90,7 @@ Launches Postgres on `localhost:${POSTGRES_HOST_PORT:-5432}` with data persisted
 3.  Set `DATABASE_URL` in `. env`
 
 ```env
-DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB
+DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:$POSTGRES_HOST_PORT/$POSTGRES_DB
 ```
 
 4. Apply database migrations
@@ -170,15 +170,12 @@ POSTGRES_USER=dona
 POSTGRES_PASSWORD=password
 POSTGRES_HOST_PORT=5432
 APP_PORT=3000
-APP_INTERNAL_PORT=3000
 DONOR_ID_INPUT_METHOD=manually
-DONOR_SURVEY_ENABLED=false
 DEMO_MODE=false
 DEMO_SHOW_HAS_TOKEN_BUTTON=false
 PUBLIC_DATA_DONATION_ENABLED=false
-FEEDBACK_SURVEY_ENABLED=true
 DONOR_SURVEY_LINK=
-FEEDBACK_SURVEY_LINK=
+FEEDBACK_SURVEY_LINK=https://survey.example.org/index.php?r=survey/index&sid=123456
 ENABLED_LANGUAGES=en,de
 DEFAULT_LANGUAGE=en
 ```
@@ -399,7 +396,6 @@ Relations and schema notes
 
 ## Troubleshooting and tips
 
-- If you change `APP_INTERNAL_PORT`, remember that Next.js reads `PORT`. In docker-compose this is set automatically from `APP_INTERNAL_PORT`.
 - For host development, use `PORT` when running `pnpm dev` or `pnpm start` to change the port.
 - If migrations fail, verify `DATABASE_URL` and that the Postgres container is healthy.
 - `next-intl` requires an initial locale; ensure locales are present under `/locales`.

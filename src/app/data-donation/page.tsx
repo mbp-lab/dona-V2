@@ -33,7 +33,7 @@ import { calculateDonationStats } from "@services/donationStats";
 import { appendContentData, appendConversationBatch, finalizeDonation, logClientError, startDonation } from "./actions";
 
 const CONVERSATION_BATCH_SIZE = 250;
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const isDemoMode = process.env.DEMO_MODE === "true";
 
 type ConversationsBySource = Record<DataSourceValue, Conversation[]>;
 type SelectedChatsBySource = Record<DataSourceValue, Set<string>>;

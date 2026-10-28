@@ -18,14 +18,21 @@ const envSchema = z.object({
   DUPLICATE_DONATION_CHECK_ENABLED: z.enum(["true", "false"]).default("true"),
   DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED: z.enum(["true", "false"]).default("false"),
   ENABLED_DATA_SOURCES: z.string().default("WhatsApp,Facebook,Instagram,IMessage"),
-  DONOR_ID_INPUT_METHOD: z.enum(["automated", "showid", "manually"]),
+  DONOR_ID_INPUT_METHOD: z.enum(["automated", "showid", "manually"]).default("automated"),
   BROWSER_LANGUAGE_ENABLED: z.enum(["true", "false"]).default("false"),
-  DONOR_SURVEY_ENABLED: z.enum(["true", "false"]).transform(val => val === "true"),
-  FEEDBACK_SURVEY_ENABLED: z.enum(["true", "false"]).transform(val => val === "true"),
-  DONOR_SURVEY_LINK: z.string().url(),
-  FEEDBACK_SURVEY_LINK: z.string().url(),
+  // A survey is shown when its link is set
+  DONOR_SURVEY_LINK: z.string().url().optional(),
+  FEEDBACK_SURVEY_LINK: z.string().url().optional(),
   ENABLED_LANGUAGES: z.string().default("en,de,hy"),
-  DEFAULT_LANGUAGE: z.string().default("en")
+  DEFAULT_LANGUAGE: z.string().default("en"),
+  // Numbers are parsed in src/config.ts, which falls back to the default for invalid values
+  MIN_CHATS_FOR_DONATION: z.string().optional(),
+  MIN_MESSAGES_PER_CHAT: z.string().optional(),
+  MIN_CONTACTS_PER_CHAT: z.string().optional(),
+  MAX_FEEDBACK_CHATS: z.string().optional(),
+  MIN_FEEDBACK_CHATS: z.string().optional(),
+  DEFAULT_FEEDBACK_CHATS: z.string().optional(),
+  MIN_MESSAGES_FOR_DUPLICATE_CHECK: z.string().optional()
 }).superRefine((env, ctx) => {
   const enabledLanguages = parseLanguageList(env.ENABLED_LANGUAGES);
 
@@ -65,7 +72,27 @@ const envSchema = z.object({
   }
 });
 
+// Removed variables that would otherwise be ignored silently, mapped to what replaces them
+const removedVariables = {
+  DONOR_SURVEY_ENABLED: "the donor survey is shown when DONOR_SURVEY_LINK is set",
+  FEEDBACK_SURVEY_ENABLED: "the feedback survey is shown when FEEDBACK_SURVEY_LINK is set",
+  NEXT_PUBLIC_MIN_CHATS_FOR_DONATION: "renamed to MIN_CHATS_FOR_DONATION",
+  NEXT_PUBLIC_MIN_MESSAGES_PER_CHAT: "renamed to MIN_MESSAGES_PER_CHAT",
+  NEXT_PUBLIC_MIN_CONTACTS_PER_CHAT: "renamed to MIN_CONTACTS_PER_CHAT",
+  NEXT_PUBLIC_MAX_FEEDBACK_CHATS: "renamed to MAX_FEEDBACK_CHATS",
+  NEXT_PUBLIC_MIN_FEEDBACK_CHATS: "renamed to MIN_FEEDBACK_CHATS",
+  NEXT_PUBLIC_DEFAULT_FEEDBACK_CHATS: "renamed to DEFAULT_FEEDBACK_CHATS",
+  NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK: "renamed to MIN_MESSAGES_FOR_DUPLICATE_CHECK"
+};
+
 export const validateEnv = () => {
+  const removedInUse = Object.keys(removedVariables).filter(key => process.env[key]);
+  if (removedInUse.length > 0) {
+    throw new Error(
+      `Environment validation failed: ${removedInUse.map(key => `${key} was removed (${removedVariables[key]})`).join(", ")}`
+    );
+  }
+
   try {
     // Docker/Compose can inject empty strings for unset variables (e.g., DEMO_MODE="").
     // Treat empty strings as undefined so zod defaults can be applied.
@@ -75,8 +102,12 @@ export const validateEnv = () => {
 
     const parsedEnv = envSchema.parse(normalizedEnv);
 
-    // Convert non-string values to strings for Next.js compatibility
-    return Object.fromEntries(Object.entries(parsedEnv).map(([key, value]) => [key, String(value)]));
+    // Drop unset optional values and convert the rest to strings for Next.js compatibility
+    return Object.fromEntries(
+      Object.entries(parsedEnv)
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => [key, String(value)])
+    );
   } catch (err) {
     throw new Error(
       err instanceof z.ZodError

@@ -33,8 +33,8 @@ const parseDefaultLocale = (rawValue: string | undefined, enabledLocales: Locale
   return enabledLocales[0] ?? "en";
 };
 
-export const locales = parseEnabledLocales(process.env.NEXT_PUBLIC_ENABLED_LANGUAGES);
-export const defaultLocale = parseDefaultLocale(process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE, locales);
+export const locales = parseEnabledLocales(process.env.ENABLED_LANGUAGES);
+export const defaultLocale = parseDefaultLocale(process.env.DEFAULT_LANGUAGE, locales);
 
 const parseBooleanEnv = (value: string | undefined, defaultValue: boolean): boolean => {
   if (value === undefined) {
@@ -89,24 +89,21 @@ export function parseEnabledDataSources(rawValue: string | undefined): DataSourc
   return Array.from(new Set(parsed));
 }
 
-export const ENABLED_DATA_SOURCES = parseEnabledDataSources(process.env.NEXT_PUBLIC_ENABLED_DATA_SOURCES);
+export const ENABLED_DATA_SOURCES = parseEnabledDataSources(process.env.ENABLED_DATA_SOURCES);
 
 export const CONFIG = {
   MIN_DONATION_TIME_PERIOD_MONTHS: 6,
 
-  MIN_CHATS_FOR_DONATION: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_CHATS_FOR_DONATION, 5),
-  MIN_MESSAGES_PER_CHAT: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_MESSAGES_PER_CHAT, 100),
-  MIN_CONTACTS_PER_CHAT: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_CONTACTS_PER_CHAT, 2),
+  MIN_CHATS_FOR_DONATION: parseNumberEnv(process.env.MIN_CHATS_FOR_DONATION, 5),
+  MIN_MESSAGES_PER_CHAT: parseNumberEnv(process.env.MIN_MESSAGES_PER_CHAT, 100),
+  MIN_CONTACTS_PER_CHAT: parseNumberEnv(process.env.MIN_CONTACTS_PER_CHAT, 2),
 
-  DUPLICATE_DONATION_CHECK_ENABLED: parseBooleanEnv(process.env.NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED, true),
-  DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED: parseBooleanEnv(
-    process.env.NEXT_PUBLIC_DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED,
-    false
-  ),
-  MIN_MESSAGES_FOR_DUPLICATE_CHECK: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_MESSAGES_FOR_DUPLICATE_CHECK, 50),
-  PUBLIC_DATA_DONATION_ENABLED: parseBooleanEnv(process.env.NEXT_PUBLIC_PUBLIC_DATA_DONATION_ENABLED, false),
+  DUPLICATE_DONATION_CHECK_ENABLED: parseBooleanEnv(process.env.DUPLICATE_DONATION_CHECK_ENABLED, true),
+  DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED: parseBooleanEnv(process.env.DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED, false),
+  MIN_MESSAGES_FOR_DUPLICATE_CHECK: parseNumberEnv(process.env.MIN_MESSAGES_FOR_DUPLICATE_CHECK, 50),
+  PUBLIC_DATA_DONATION_ENABLED: parseBooleanEnv(process.env.PUBLIC_DATA_DONATION_ENABLED, false),
 
-  MAX_FEEDBACK_CHATS: parseNumberEnv(process.env.NEXT_PUBLIC_MAX_FEEDBACK_CHATS, 10),
-  MIN_FEEDBACK_CHATS: parseNumberEnv(process.env.NEXT_PUBLIC_MIN_FEEDBACK_CHATS, 3),
-  DEFAULT_FEEDBACK_CHATS: parseNumberEnv(process.env.NEXT_PUBLIC_DEFAULT_FEEDBACK_CHATS, 5)
+  MAX_FEEDBACK_CHATS: parseNumberEnv(process.env.MAX_FEEDBACK_CHATS, 10),
+  MIN_FEEDBACK_CHATS: parseNumberEnv(process.env.MIN_FEEDBACK_CHATS, 3),
+  DEFAULT_FEEDBACK_CHATS: parseNumberEnv(process.env.DEFAULT_FEEDBACK_CHATS, 5)
 };

@@ -19,9 +19,9 @@ import { FacebookIcon, IMessageIcon, InstagramIcon, WhatsAppIcon } from "@compon
 import DatasourceSpecificInstructions from "@components/DatasourceSpecificInstructions";
 import { DataSourceValue } from "@models/processed";
 
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
-const isUploadTestEnabled = process.env.NEXT_PUBLIC_UPLOAD_TEST_ENABLED !== "false";
-const isConsentEnabled = process.env.NEXT_PUBLIC_CONSENT_ENABLED !== "false";
+const isDemoMode = process.env.DEMO_MODE === "true";
+const isUploadTestEnabled = process.env.UPLOAD_TEST_ENABLED !== "false";
+const isConsentEnabled = process.env.CONSENT_ENABLED !== "false";
 
 const sampleDataFiles = [
   {

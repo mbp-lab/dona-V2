@@ -23,7 +23,7 @@ import { DonationErrors, getErrorMessage } from "@services/errors";
 import { calculateMinMaxDates, filterDataByRange, NullableRange, validateDateRange } from "@services/rangeFiltering";
 import { validateMinChatsForDonation, validateMinImportantChatsForDonation } from "@services/validation";
 
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const isDemoMode = process.env.DEMO_MODE === "true";
 const duplicateCheckEnabled = !isDemoMode && CONFIG.DUPLICATE_DONATION_CHECK_ENABLED;
 const duplicateCheckCsvDownloadEnabled = CONFIG.DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED;
 
