@@ -12,3 +12,8 @@ allowBuilds:
   "@swc/core": false
   esbuild: false
   unrs-resolver: false
+
+permissions:
+  dotenv:
+    build: false
+    skills: false
