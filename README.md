@@ -186,7 +186,7 @@ DEFAULT_LANGUAGE=en
 docker compose up  # add -d to run detached
 ```
 
-On first run, this automatically builds the Docker image with the settings from the `.env` file (mounted as a build secret, so it is not stored in the image). After code changes, use `docker compose up --build` to rebuild.
+On first run, this automatically builds the Docker image with the settings from the `.env` file (mounted only for the build, so it is not stored in the image). After code changes, use `docker compose up --build` to rebuild.
 
 The app will be available at `http://localhost:${APP_PORT:-3000}`
 

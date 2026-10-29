@@ -1,7 +1,7 @@
 # Ignore node_modules (dependencies will be installed in the container)
 node_modules
-# Ignore environment files (passed as environment variables)
-.env
+# Ignore environment files (passed as environment variables). .env itself is needed for the
+# build and kept out of the image by the Dockerfile.
 .env.local
 .env.test
 # Ignore version control system files
