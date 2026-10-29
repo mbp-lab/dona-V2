@@ -68,7 +68,7 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
   - `APP_PORT` — host port to bind the web app to in docker-compose (default: `3000`)
   - `COMPOSE_PROJECT_NAME` — docker-compose project name, which prefixes container and volume names (default: name of the folder containing `docker-compose.yml`)
   - `PORT` — port of `pnpm dev` / `pnpm start` on the host (default: `3000`); ignored inside docker-compose
-- `DEV_ALLOWED_ORIGINS` — comma-separated hosts (`host[:port]`) allowed to access `pnpm dev` and to call server actions on the dev server (default: `127.0.0.1,127.0.0.1:3000,127.0.0.1:9012,localhost:3000`)
+- `DEV_ALLOWED_ORIGINS` — comma-separated hosts (`host[:port]`) allowed to access `pnpm dev` and to call server actions on the dev server (default: `127.0.0.1,127.0.0.1:3000,localhost:3000`)
 - `SERVER_ACTIONS_ALLOWED_ORIGINS` — comma-separated hosts (`host[:port]`, `*.` wildcards allowed) that may call server actions in production. Only needed behind a reverse proxy that forwards neither `Host` nor `X-Forwarded-Host` (default: empty)
 
 ## Local Development with Hot-reload

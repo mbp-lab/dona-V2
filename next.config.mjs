@@ -10,7 +10,7 @@ const parseOriginList = value =>
     .filter(Boolean);
 const devOrigins = process.env.DEV_ALLOWED_ORIGINS
   ? parseOriginList(process.env.DEV_ALLOWED_ORIGINS)
-  : ["127.0.0.1", "127.0.0.1:3000", "127.0.0.1:9012", "localhost:3000"];
+  : ["127.0.0.1", "127.0.0.1:3000", "localhost:3000"];
 // Next.js compares these with the host of the request origin, so they are host[:port] without a scheme
 const serverActionOrigins = parseOriginList(process.env.SERVER_ACTIONS_ALLOWED_ORIGINS ?? "");
 const withNextIntl = createNextIntlPlugin();
