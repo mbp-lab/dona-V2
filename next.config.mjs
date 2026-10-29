@@ -1,42 +1,30 @@
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
 import createNextIntlPlugin from "next-intl/plugin";
 import { validateEnv } from "./src/services/validateEnv.mjs";
 
 const env = validateEnv();
-const devOrigins = process.env.NEXT_ALLOWED_DEV_ORIGINS ? process.env.NEXT_ALLOWED_DEV_ORIGINS.split(",") : [
-  "127.0.0.1",
-  "127.0.0.1:3000",
-  "127.0.0.1:9012",
-  "localhost:3000"
-];
+const parseOriginList = value =>
+  value
+    .split(",")
+    .map(origin => origin.trim())
+    .filter(Boolean);
+const devOrigins = process.env.DEV_ALLOWED_ORIGINS
+  ? parseOriginList(process.env.DEV_ALLOWED_ORIGINS)
+  : ["127.0.0.1", "127.0.0.1:3000", "localhost:3000"];
+// Next.js compares these with the host of the request origin, so they are host[:port] without a scheme
+const serverActionOrigins = parseOriginList(process.env.SERVER_ACTIONS_ALLOWED_ORIGINS ?? "");
 const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  env: {
-    ...env,
-    NEXT_PUBLIC_DEMO_MODE: env.DEMO_MODE,
-    NEXT_PUBLIC_DEMO_SHOW_HAS_TOKEN_BUTTON: env.DEMO_SHOW_HAS_TOKEN_BUTTON,
-    NEXT_PUBLIC_UPLOAD_TEST_ENABLED: env.UPLOAD_TEST_ENABLED,
-    NEXT_PUBLIC_CONSENT_ENABLED: env.CONSENT_ENABLED,
-    NEXT_PUBLIC_TOKEN_REQUIRED: env.TOKEN_REQUIRED,
-    NEXT_PUBLIC_PUBLIC_DATA_DONATION_ENABLED: env.PUBLIC_DATA_DONATION_ENABLED,
-    NEXT_PUBLIC_DUPLICATE_DONATION_CHECK_ENABLED: env.DUPLICATE_DONATION_CHECK_ENABLED,
-    NEXT_PUBLIC_DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED: env.DUPLICATE_CHECK_CSV_DOWNLOAD_ENABLED,
-    NEXT_PUBLIC_ENABLED_LANGUAGES: env.ENABLED_LANGUAGES,
-    NEXT_PUBLIC_DEFAULT_LANGUAGE: env.DEFAULT_LANGUAGE,
-    NEXT_PUBLIC_ENABLED_DATA_SOURCES: env.ENABLED_DATA_SOURCES,
-    NEXT_PUBLIC_DONOR_ID_INPUT_METHOD: env.DONOR_ID_INPUT_METHOD,
-    NEXT_PUBLIC_DONOR_SURVEY_ENABLED: env.DONOR_SURVEY_ENABLED,
-    NEXT_PUBLIC_DONOR_SURVEY_LINK: env.DONOR_SURVEY_LINK,
-    NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED: env.FEEDBACK_SURVEY_ENABLED,
-    NEXT_PUBLIC_FEEDBACK_SURVEY_LINK: env.FEEDBACK_SURVEY_LINK
-  },
+  // Inlines the validated settings at build time, for server and client code alike
+  env,
   allowedDevOrigins: devOrigins,
   experimental: {
     serverActions: {
       bodySizeLimit: "500mb",
-      allowedOrigins: [...devOrigins, "https://nyu.dona.tf.uni-bielefeld.de"]
+      allowedOrigins: serverActionOrigins
     }
   },
   // Tell Next.js to skip bundling sql.js - it will be loaded dynamically at runtime
@@ -81,4 +69,10 @@ const nextConfig = {
   }
 };
 
-export default withNextIntl(nextConfig);
+export default phase => {
+  // The dev origins may also call server actions, but only on the dev server
+  if (phase === PHASE_DEVELOPMENT_SERVER) {
+    nextConfig.experimental.serverActions.allowedOrigins = [...devOrigins, ...serverActionOrigins];
+  }
+  return withNextIntl(nextConfig);
+};

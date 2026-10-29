@@ -10,9 +10,9 @@ import { LinkButton } from "@/components/LinkButton";
 import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
-const isDemoShowHasTokenButton = process.env.NEXT_PUBLIC_DEMO_SHOW_HAS_TOKEN_BUTTON === "true";
-const isTokenRequired = process.env.NEXT_PUBLIC_TOKEN_REQUIRED !== "false";
+const isDemoMode = process.env.DEMO_MODE === "true";
+const isDemoShowHasTokenButton = process.env.DEMO_SHOW_HAS_TOKEN_BUTTON === "true";
+const isTokenRequired = process.env.TOKEN_REQUIRED !== "false";
 
 export default function HomePage() {
   const landing = useRichTranslations("landing");

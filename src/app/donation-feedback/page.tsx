@@ -18,9 +18,8 @@ import Button from "@mui/material/Button";
 
 import { fetchOrComputeGraphDataByDonationId, getDonationId } from "./actions";
 
-const isFeedbackSurveyEnabled = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_ENABLED === "true";
-const feedbackSurveyLink = process.env.NEXT_PUBLIC_FEEDBACK_SURVEY_LINK;
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const feedbackSurveyLink = process.env.FEEDBACK_SURVEY_LINK;
+const isDemoMode = process.env.DEMO_MODE === "true";
 
 export default function DonationFeedbackPage() {
   const actions = useTranslations("actions");
@@ -50,10 +49,7 @@ export default function DonationFeedbackPage() {
   }, [feedbackData, setDonationData]);
 
   const handleContinue = () => {
-    window.location.href =
-      isFeedbackSurveyEnabled && feedbackSurveyLink
-        ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}`
-        : "/";
+    window.location.href = feedbackSurveyLink ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/";
   };
 
   return (

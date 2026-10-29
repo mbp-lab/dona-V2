@@ -20,11 +20,10 @@ import { BlockTitle, ContactBlock } from "@/styles/StyledTypography";
 import FullSizeModal from "@components/FullSizeModal";
 import { IdInputMethod } from "@models/settings";
 
-const idInputMethod = process.env.NEXT_PUBLIC_DONOR_ID_INPUT_METHOD as IdInputMethod;
-const isDonorSurveyEnabled = process.env.NEXT_PUBLIC_DONOR_SURVEY_ENABLED === "true";
-const donorSurveyLink = process.env.NEXT_PUBLIC_DONOR_SURVEY_LINK;
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
-const isConsentEnabled = process.env.NEXT_PUBLIC_CONSENT_ENABLED !== "false";
+const idInputMethod = process.env.DONOR_ID_INPUT_METHOD as IdInputMethod;
+const donorSurveyLink = process.env.DONOR_SURVEY_LINK;
+const isDemoMode = process.env.DEMO_MODE === "true";
+const isConsentEnabled = process.env.CONSENT_ENABLED !== "false";
 
 export default function ConsentModal() {
   const actions = useRichTranslations("actions");
@@ -93,10 +92,9 @@ export default function ConsentModal() {
       setExternalDonorId(manualId);
     }
 
-    window.location.href =
-      isDonorSurveyEnabled && donorSurveyLink
-        ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
-        : "/data-donation";
+    window.location.href = donorSurveyLink
+      ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
+      : "/data-donation";
   };
   // Continue after consent: either directly, or via the donor ID dialog
   const handleProceed = idInputMethod === IdInputMethod.AUTOMATED ? handleAgree : () => setDialogOpen(true);
