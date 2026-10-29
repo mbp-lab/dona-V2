@@ -54,7 +54,6 @@ Create a `.env` file in the project root, by copying and renaming `.env.example`
 - `DEFAULT_LANGUAGE` — default UI language (must be one of `ENABLED_LANGUAGES`)
 - `BROWSER_LANGUAGE_ENABLED` — set to `true` to use the browser language when no locale cookie is set (default: `false`)
 - `DEMO_MODE` — set to `true` to run Dona in demo mode (no data ingestion, no duplicate checks, demo notices in flow, sample data downloads on the instructions page, disabled consent PDF download, and no final survey CTA)
-- `DEMO_SHOW_HAS_TOKEN_BUTTON` — set to `true` to show the "I have received my token" button in demo mode
 - `UPLOAD_TEST_ENABLED` — set to `false` to skip the data file testing step before upload (default: `true`)
 - `CONSENT_ENABLED` — set to `false` to skip the declaration of consent. The donor ID step and the donor survey redirect still take place (default: `true`)
 - `TOKEN_REQUIRED` — set to `false` to allow users to proceed without a token (default: `true`)
@@ -174,7 +173,6 @@ POSTGRES_HOST_PORT=5432
 APP_PORT=3000
 DONOR_ID_INPUT_METHOD=manually
 DEMO_MODE=false
-DEMO_SHOW_HAS_TOKEN_BUTTON=false
 PUBLIC_DATA_DONATION_ENABLED=false
 DONOR_SURVEY_LINK=
 FEEDBACK_SURVEY_LINK=https://survey.example.org/index.php?r=survey/index&sid=123456
