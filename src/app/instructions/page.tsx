@@ -26,20 +26,25 @@ const isConsentEnabled = process.env.CONSENT_ENABLED !== "false";
 const sampleDataFiles = [
   {
     key: "whatsapp",
+    source: DataSourceValue.WhatsApp,
     href: "https://uni-bielefeld.sciebo.de/s/EDdRfJzO8p9ndNZ",
     external: true
   },
   {
     key: "instagram",
+    source: DataSourceValue.Instagram,
     href: "/documents/sample-data/artificial_instagram_export_valid.zip",
     external: false
   },
   {
     key: "imessage",
+    source: DataSourceValue.IMessage,
     href: "/documents/sample-data/valid_data.db",
     external: false
   }
 ] as const;
+// Only offer sample data for the data sources that can be donated
+const enabledSampleDataFiles = sampleDataFiles.filter(file => ENABLED_DATA_SOURCES.includes(file.source));
 
 const getDataSourceLabel = (source: DataSourceValue) => {
   if (source === DataSourceValue.IMessage) return "iMessage";
@@ -68,7 +73,7 @@ export default function Instructions() {
           <Typography variant="body1">{instructions.rich("about.body")}</Typography>
         </Box>
 
-        {isDemoMode && (
+        {isDemoMode && enabledSampleDataFiles.length > 0 && (
           <Box
             sx={{
               width: "100%",
@@ -87,7 +92,7 @@ export default function Instructions() {
               {feedback.t("sampleData.body")}
             </Typography>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-              {sampleDataFiles.map(file => (
+              {enabledSampleDataFiles.map(file => (
                 <Button
                   key={file.key}
                   variant="outlined"
