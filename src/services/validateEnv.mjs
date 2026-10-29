@@ -10,7 +10,6 @@ const parseLanguageList = value =>
 
 const envSchema = z.object({
   DEMO_MODE: z.enum(["true", "false"]).default("false"),
-  DEMO_SHOW_HAS_TOKEN_BUTTON: z.enum(["true", "false"]).default("false"),
   UPLOAD_TEST_ENABLED: z.enum(["true", "false"]).default("true"),
   CONSENT_ENABLED: z.enum(["true", "false"]).default("true"),
   TOKEN_REQUIRED: z.enum(["true", "false"]).default("true"),

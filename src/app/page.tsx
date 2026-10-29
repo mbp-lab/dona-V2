@@ -11,7 +11,6 @@ import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, MainTitle, RichText } from "@/styles/StyledTypography";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
-const isDemoShowHasTokenButton = process.env.DEMO_SHOW_HAS_TOKEN_BUTTON === "true";
 const isTokenRequired = process.env.TOKEN_REQUIRED !== "false";
 
 export default function HomePage() {
@@ -158,11 +157,9 @@ export default function HomePage() {
                 {landing.t("enrollment.signUpButton")}
               </LinkButton>
             ) : null}
-            {(!isTokenRequired || !isDemoMode || isDemoShowHasTokenButton) && (
-              <LinkButton variant="contained" href="/instructions">
-                {isTokenRequired ? landing.t("enrollment.hasTokenButton") : actions.t("donate")}
-              </LinkButton>
-            )}
+            <LinkButton variant="contained" href="/instructions">
+              {isTokenRequired ? landing.t("enrollment.hasTokenButton") : actions.t("donate")}
+            </LinkButton>
           </Stack>
         </Box>
       </Stack>
