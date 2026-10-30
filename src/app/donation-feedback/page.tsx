@@ -15,6 +15,7 @@ import DataSourceFeedbackSection from "@components/DataSourceFeedbackSection";
 import LoadingSpinner from "@components/LoadingSpinner";
 import { DataSourceValue } from "@models/processed";
 import Button from "@mui/material/Button";
+import { buildSurveyLink } from "@services/surveyLink";
 
 import { fetchOrComputeGraphDataByDonationId, getDonationId } from "./actions";
 
@@ -49,7 +50,7 @@ export default function DonationFeedbackPage() {
   }, [feedbackData, setDonationData]);
 
   const handleContinue = () => {
-    window.location.href = feedbackSurveyLink ? `${feedbackSurveyLink}?UID=${externalDonorId}&lang=${locale}` : "/";
+    window.location.href = feedbackSurveyLink ? buildSurveyLink(feedbackSurveyLink, externalDonorId, locale) : "/";
   };
 
   return (

@@ -19,6 +19,7 @@ import { useRichTranslations } from "@/hooks/useRichTranslations";
 import { BlockTitle, ContactBlock } from "@/styles/StyledTypography";
 import FullSizeModal from "@components/FullSizeModal";
 import { IdInputMethod } from "@models/settings";
+import { buildSurveyLink } from "@services/surveyLink";
 
 const idInputMethod = process.env.DONOR_ID_INPUT_METHOD as IdInputMethod;
 const donorSurveyLink = process.env.DONOR_SURVEY_LINK;
@@ -93,7 +94,7 @@ export default function ConsentModal() {
     }
 
     window.location.href = donorSurveyLink
-      ? `${donorSurveyLink}?UID=${externalDonorId}&lang=${locale}`
+      ? buildSurveyLink(donorSurveyLink, externalDonorId, locale)
       : "/data-donation";
   };
   // Continue after consent: either directly, or via the donor ID dialog
